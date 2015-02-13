@@ -1,0 +1,233 @@
+\section{Introduction \& Motivations}
+
+Depending on the co-occurrence quantification, and depending on the composition for s-v-o, for some expressions, one  gets equivalences between geometric and probabilistic (and information-theoretic) expressions.
+
+\section{rather obvious I suppose}
+
+\subsection{Single Terms}
+
+In IR, the main measure of retrieval is TF-IDF. In its most basic form, given a term $t$,  a document $d$, and a set of documents $D$, this is the frequency  of   $t$  in $d$, multiplied by  the logarithm of the  total number of documents $N$ divided by the number of documents with $t$ in them. 
+
+\begin{equation}
+\label{tf-idf}
+TF(t,d) \cdot IDF(t, D) = freq(t, d) \cdot \log{{N} \over {\mid \{d \in D \mid t \in d\}\mid}}
+\end{equation}
+
+In DS, given is a corpus of text in which one works with the frequency of co-occurrence of terms with a set of  features, in a window of length $k$. Given a set of $m$ features $F = \{f_1, f_2, \cdots, f_m\}$, the space is the vector space with $F$ as its basis, that is $V = \{f_i\}_i$. The vector representation of a term $t$ is a linear combination of the basis:
+
+\begin{equation}
+\label{vector-word}
+\overrightarrow{t}  = \sum_i  C_i  \overrightarrow{f}_i
+\end{equation}
+
+The coordinate $C_i$ over the basis vector $\overrightarrow{f}_i$ is a normalised function of the frequency of co-occurrence of $t$ with $f_i$ in the window of length $k$. Denoting the latter by  $g(freq_k(t,f_i))$, we obtain 
+
+\begin{equation}
+C_i = g(freq_k(t,f_i))
+\end{equation}
+
+Forgetting about the $i$ indices for a minute, note that 
+
+\begin{equation}
+freq_k(t,f) = {{\sum_f N(t,f)} \over {k}}
+\end{equation}
+
+for $N(t, f)$ the number of times $t$ and $f$ occurred  $k$ words close to each other.  So in DS, one works with the frequency of co-occurrence of terms with features rather than with documents. Hence, if one replaces the $d$'s in equation \ref{tf-idf} with $f$'s, one obtains:
+
+\begin{equation}
+\label{f-for-d}
+freq_k(t, f) \cdot \log{{m} \over {\mid \{f \in F \mid N(t,f)  \neq 0 \}\mid}}
+\end{equation}
+
+With the right choice of event spaces, one can establish
+
+\begin{eqnarray}
+P(t) &=&  {{\sum_f N(f,t)} \over {kL}} = {{freq_k(t,f)} \over {L}}\\
+P(t | f) &=&  {{\mid \{f \in F \mid N(t,f)  \neq 0 \}\mid} \over {m}}
+\end{eqnarray}
+for $L$ the number of times $t$ occurred in the corpus as a whole.  Hence one can rewrite equation \ref{f-for-d} as
+
+\begin{equation}
+freq_k(t,f) \cdot \log{1 \over P(t|f)}
+\end{equation}
+This is the same as saying that  the normalisation function $g$ in DS is a multiplication by $ \log{1 \over P(t|f)}$:
+
+\[
+g(freq_k(t, f)) = freq_k(t,f) \cdot \log{1 \over P(t|f)}
+\]
+This  is indeed an IDF value in which features are seen as documents, we refer to this by `TF-IFF', where `IFF' is for Inverse Feature Frequency. Herein, one obtains a term vector as follows:
+
+\begin{equation}
+\label{vector-word-idf}
+\overrightarrow{t}  = \sum_i  freq_k(t,f_i) \cdot \log{1 \over P(t|f_i)}  \overrightarrow{f}_i
+\end{equation}
+
+
+It is surprising however,   that this is not a familiar normalisation scheme in DS. The  most known and worked-with of the latter are  Conditional Probability: $\operatorname{P}_k(f|t)$,  Likelihood Ratio: $\operatorname{LR}_k(f,t) 
+= {{P(f \mid t)} \over{P(f)}}$,  and PMI$_k$: $PMI_k (f, t) =  \log{{P(f \mid t)} \over{P(f)}}$.  One simple way to relate these to IR is to say that $g$ is the the multiplication of any of these with the same  IFF as above. 
+
+
+From these,  the most relevant to IR seems to be PMI. This resembles the Document Term Independence (DTI) measure, where  for a single term $t$ we have:
+
+\begin{equation}
+\label{independence}
+\textmd{DTI}(d,t) := \log\frac{P(d | t)}{P(d)} = \log\frac{P(t|d)}{P(t)}
+\end{equation}
+
+
+Here  ${1} \over {P(d)}$ is the IDF and  $P(d| t)$ is the TF. 
+
+
+
+
+
+Other normalisation schemes such as conditional probability, LMI, BM25 etc ???
+
+\subsection{Phrases}
+
+In CDS
+
+
+In IR
+
+
+
+\begin{eqnarray}
+\label{tf-idf-phrase}
+\RSV_\textmd{TF-IDF}(d,q) &:=& \sum_{t \in q} \textmd{score}(t,d,q)\\
+\textmd{score}(t,d,q) &:=&
+\TF(t,d) \cdot \IDF(t)
+\end{eqnarray}
+
+\section{Why the independence measure is best}
+
+Multiplication of three vectors: s, v and o.
+\[
+\frac{
+P(c|s) \cdot P(c|v) \cdot P(c|o)}{
+P(c) \cdot P(c) \cdot P(c)} =
+\frac{
+P(s|c) \cdot P(v|c) \cdot P(o|c)
+}{
+P(s) \cdot P(v) \cdot P(o)
+}
+\]
+Let $t_i$ and $t_j$ be two propositions
+(e.g.~s-v-o).
+
+$\textmd{sim}(t_i,t_j)$ is high if
+\begin{enumerate}
+\item many features occur within the context of subject, verb, and object
+\item the features are rare
+\end{enumerate}
+
+cos: corresponds to sum over independence measure.
+Therefore, pmi is the correct model.
+Corresponds to
+\[
+\sum_c \log(...) = \log \prod_c(...)
+\]
+
+
+
+Does not work for different
+spaces for nouns and verbs?
+
+The multiplication yields a probability
+for the subj-verb-obj sequence where all
+components are independent of each other.
+
+Multiplication of two conditional probs means then what?
+Effect of L2 norm?
+
+
+Relationship to LM - there should be an obvious one.
+
+
+\section{Decomposing Similarity}
+Decompsoed additive baseline similarity
+\[
+\frac{cos(sbj1,sbj2) + cos(vrb1,vrb2)) + cos(obj1,obj2)}{3}
+\]
+
+Can any of the NLP sentence similarities decompose? It does not seem so, for example
+\begin{eqnarray*}
+cos(sbj1+verb1,sbj2+vrb2) &\neq& cos(sbj1, sbj2) + cos(vrb1,vrb2) \\
+cos(sbj1\odot verb1,sbj2+vrb2) &\neq& cos(sbj1, sbj2) \odot cos(vrb1,vrb2)
+\end{eqnarray*}
+For kronecker composition has to move between vector of different tensor rank, i.e. either from $V$ to $V \otimes V$ or from the latter to the former. Diagonalization might be helpful here, also convolution kernel might help. 
+
+In general, may be the sentence cosines, do doecompsoe but not in a direct way as above, that is when left and right have the same operation. The operations might vary from lef to right, or the ratios might be preserved etc. 
+
+
+
+\section{cosines again}
+
+\begin{eqnarray}
+\cos(angle(s\odot v\odot o, ...) &=&  1/ \sum P(s,v,o|c) \cdot P(c)\\
+\cos(angle(s+v+o, ...) &=& \sum (P(s|c)  \cdot  ... + P(v|c) ... + ....)  \cdot  ....\\
+\cos(angle(s+v+o, ...) &=&  \sum (\log{\Pi_{x in s,v,o} (P(x,c)/P(x) \cdot P(c)) ...}\\
+\end{eqnarray}
+
+\section{various log measures}
+
+\begin{eqnarray}
+\textmd{NLogP}&   N(t,c)  \cdot \log{1}{P(c)}\\
+\textmd{LogNLogP}&  log(N(t,c)+1) \cdot \log{1}{P(c)}\\
+\textmd{PExpN}&    P(c)^{-N(t,c)}\\
+\textmd{PExpLogN}& P(c)^{-\log{N(t,c)+1}}\\
+\end{eqnarray}
+
+\begin{table*}[htbp]
+\begin{tabularx}{\textwidth}{l|XX}
+& NLP & IR\\
+\hline
+co-occurrence
+&
+        co-occurrence between the semantic symbol (target word) and feature words
+        &
+        co-occurrence between the semantic symbols (words) themselves
+        \\
+        \hline
+representation of words
+        & distributional & symbolic\\
+        \hline
+single vs set & similarity between two
+    \emph{single phrases}
+    & relationship (implication, entailment) between two
+    \emph{sets of phrases}\\
+
+symmetric yes/no &
+    similarity is a symmetric function &
+relationship between sets is not symmetric; moreover, the phrase-based score is not necessarily symmetric\\
+\hline
+similar/relevant
+& phrase $t_i$ is similar to phrase $t_j$ &
+document~$d$ (source) is relevant with respect to query~$q$ (target)\\
+\hline
+scores
+& the similarity score is estimated
+based on the distance/angle between distributional vectors
+& the relevance score is estimated
+based on the retrieval model that computes the implication between the set of document and the set of query propositions\\
+probabilistic semantics
+& (in)dependence between target word and feature word: $\frac{P(w_t,w_f)}{P(w_t) \cdot P(w_f)}$
+& (in)dependent between document and query:
+$\frac{P(d,q)}{P(d) \cdot P(q)}$\\
+\hline
+& for this work: virtual query has exactly one proposition; virtual document has exactly one condition; therefore, the similarity score $\textmd{sim}(\textmd{phrase1},\textmd{phrase2})$ can be compared to the retrieval score
+$\textmd{RSV}(\textmd{document: set of phrases},\textmd{query: set of phrases})$.
+
+TODO: how to get this over two columns
+\\
+        \hline
+\end{tabularx}
+\end{table*}
+
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "paper"
+%%% End:

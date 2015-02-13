@@ -1,0 +1,12 @@
+# 1. The case of word-based IR:
+?- D[ vehicle ];
+# d123[ boat ]
+# ontology: boat is a sub-concept of vehicle, in other words, boat->vehicle.
+# Since boat implies vehicle, retrieve doc123.
+
+# 2. The case of knowledge-based (semantic) IR:
+?- D[ person.spends(money) ];
+# doc456[ lecturer.buys(boat) ]
+# Since the sentence lecturer.buys(boat) implies person.spends(money), retrieve doc123.
+# Note that lecturer implies person (semantic relationship between subjects), but
+# boat does not semantically imply money (no semantic relationship between objects).

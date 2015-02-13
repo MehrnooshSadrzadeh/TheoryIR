@@ -1,0 +1,81 @@
+%\documentclass[12pt,a4paper]{article}
+%\documentclass{acm_proc_article-sp} % rather dense
+\documentclass{sig-alternate} % more spacy than acm_proc_article
+% Remember to comment usepackage{paper} when using an ACM style.
+
+%\documentclass{acmsmall} % journal
+%\documentclass{llncs} % l... lecture notes in computer science
+
+%\usepackage{paper}
+\usepackage{amsmath}
+\usepackage{times}
+\usepackage{alltt}
+\usepackage{tabularx}
+\usepackage{subfigure}
+\usepackage{epsfig}
+%\usepackage{graphics}
+\usepackage{listings} % Keep listings before HySpirit
+\usepackage{HySpirit}
+\usepackage{thormath}
+\usepackage{thorirmath}
+%\usepackage{epstopdf}
+%\usepackage{german}
+%\pagestyle{empty}
+
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{alltt}
+\usepackage{nicefrac}
+
+\sloppy
+
+\title{Decomposing Similarity and Composing Indpendance}
+% \author{Dmitrijs Milajevs \and Mehrnoosh Sadrzadeh \and Thomas Roelleke}
+\date{}
+
+\parindent0cm
+\parskip1ex
+% These settings are in paper.sty as well.
+
+\newtheorem{definition}{Definition} % defined in journal style
+\newtheorem{example}{Example} % defined in journal style
+\newtheorem{theorem}{Theorem} % defined in journal style
+%\newtheorem{proof}{Proof} % defined in acm_proc/sig styles
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\input{abstract}
+\end{abstract}
+
+\category{H.3.3}{Information Search and Retrieval}{Retrieval Models}
+
+\terms{Algorithms; Theory} 
+%There are 16 General Terms: 1. ALGORITHMS 2. MANAGEMENT 3. DESIGN 4. MEASUREMENT 5. DOCUMENTATION 6. PERFORMANCE 7. ECONOMICS 8. RELIABILITY 9. EXPERIMENTATION 10. SECURITY 11. HUMAN FACTORS 12. STANDARDIZATION 13. LANGUAGES 14. THEORY 15. LEGAL ASPECTS 16. VERIFICATION
+
+\keywords{NPL, Subject-Verb-Object (SVO), Semantic IR}
+
+
+\input{body}
+
+%\nocite{Lalmas/Roelleke:2002}
+%\nocite{Roelleke/Fuhr:96} % Logic for Complex Objects, ACM SIGIR 96
+%\nocite{Roelleke:2003} % Probability of being informative, ACM SIGIR
+%\nocite{deVries/Roelleke:2005} % Relevance feedback: Gain for IDF and Loss of Entropy, ACM SIGIR 05
+%\nocite{Roelleke/Wang:2006} % Parallel derivation, ACM SIGIR
+%\nocite{Roelleke/etal:2007} % Bayes VLDB Journal 2008
+%\nocite{Roelleke/Wang:2008} % TF-IDF uncovered, ACM SIGIR
+\bibliography{bibdb,references} 
+\bibliographystyle{plain}
+
+%\bibliographystyle{unsrt}
+%\bibliographystyle{unsrtnat}
+%\bibliographystyle{gerunsrt}
+%\bibliographystyle{plain}
+%\bibliographystyle{apalike}
+
+
+
+\end{document}

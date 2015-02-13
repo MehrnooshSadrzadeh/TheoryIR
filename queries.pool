@@ -1,0 +1,6 @@
+# Retrieve Documents in which the words peter, friend, and mary occur.
+?- D[ peter & friend & mary ];
+
+# Retrieve Documents in which the proposition ``peter is a friend of mary" occurs.
+# Retrieve Documents ...
+?- D[ peter.friendOf(mary) ];

@@ -1,0 +1,160 @@
+\appendix
+
+\section{NLP vs IR}
+
+\begin{table*}[htbp]
+\begin{tabularx}{\textwidth}{l|XX}
+& NLP & IR\\
+\hline
+co-occurrence
+&
+        co-occurrence between the semantic symbol (target word) and feature words
+        &
+        co-occurrence between the semantic symbols (words) themselves
+        \\
+        \hline
+representation of words
+        & distributional & symbolic\\
+        \hline
+single vs set & similarity between two
+    \emph{single phrases}
+    & relationship (implication, entailment) between two
+    \emph{sets of phrases}\\
+
+symmetric yes/no &
+    similarity is a symmetric function &
+relationship between sets is not symmetric; moreover, the phrase-based score is not necessarily symmetric\\
+\hline
+similar/relevant
+& phrase $t_i$ is similar to phrase $t_j$ &
+document~$d$ (source) is relevant with respect to query~$q$ (target)\\
+\hline
+scores
+& the similarity score is estimated
+based on the distance/angle between distributional vectors
+& the relevance score is estimated
+based on the retrieval model that computes the implication between the set of document and the set of query propositions\\
+probabilistic semantics
+& (in)dependence between target word and feature word: $\frac{P(w_t,w_f)}{P(w_t) \cdot P(w_f)}$
+& (in)dependent between document and query:
+$\frac{P(d,q)}{P(d) \cdot P(q)}$\\
+\hline
+& for this work: virtual query has exactly one proposition; virtual document has exactly one condition; therefore, the similarity score $\textmd{sim}(\textmd{phrase1},\textmd{phrase2})$ can be compared to the retrieval score
+$\textmd{RSV}(\textmd{document: set of phrases},\textmd{query: set of phrases})$.
+
+TODO: how to get this over two columns
+\\
+        \hline
+\end{tabularx}
+\end{table*}
+
+\section{data}
+
+\begin{verbatim}
+Target,Context,"N5(t, c)",N(t),N(c),P(c),P5(c|t),R5,PMI5,PPMI5,SIM_ppmi,SIM_ratio
+man,woman,72594,955363,576966
+
+0.00025625057145412807,0.07598577713392711,296.5292007066976,5.692145698265373,5.692145698265373
+
+0.9377142577638676,0.7264246690255856
+\end{verbatim}
+
+
+\section{Why the independence measure is best}
+
+Multiplication of three vectors: s, v and o.
+\[
+\frac{
+P(c|s) \cdot P(c|v) \cdot P(c|o)}{
+P(c) \cdot P(c) \cdot P(c)} =
+\frac{
+P(s|c) \cdot P(v|c) \cdot P(o|c)
+}{
+P(s) \cdot P(v) \cdot P(o)
+}
+\]
+Let $t_i$ and $t_j$ be two propositions
+(e.g.~s-v-o).
+
+$\textmd{sim}(t_i,t_j)$ is high if
+\begin{enumerate}
+\item many features occur within the context of subject, verb, and object
+\item the features are rare
+\end{enumerate}
+
+cos: corresponds to sum over independence measure.
+Therefore, pmi is the correct model.
+Corresponds to
+\[
+\sum_c \log(...) = \log \prod_c(...)
+\]
+
+
+
+Does not work for different
+spaces for nouns and verbs?
+
+The multiplication yields a probability
+for the subj-verb-obj sequence where all
+components are independent of each other.
+
+Multiplication of two conditional probs means then what?
+Effect of L2 norm?
+
+
+Relationship to LM - there should be an obvious one.
+
+\section{SVO Optimial Weighting}
+
+\begin{verbatim}
+w_space0{
+0.40 (subj);
+0.30 (verb);
+0.30 (obj);
+# corr: R5: 76.7
+}
+w_space1{
+0.45 (subj);
+0.35 (verb);
+0.20 (obj);
+# corr: R5: 75.x
+}
+
+w_space2{
+0.35 (subj);
+0.40 (verb);
+0.25 (obj);
+# corr: R5: 75.0
+}
+\end{verbatim}
+
+
+\begin{tabular}{lr}
+\toprule
+{} &         Symbolic to Mixture relative improvement \\
+\midrule
+BNC N5      &  0.060823 \\
+BNC P5      &  0.111693 \\
+BNC PPMI5   &  0.075668 \\
+BNC R5      &  0.035765 \\
+ukWaC N5    &  0.075501 \\
+ukWaC P5    &  0.203443 \\
+ukWaC PPMI5 &  0.049865 \\
+ukWaC R5    &  0.023468 \\
+\bottomrule
+\end{tabular}
+
+\section{Decomposing Similarity}
+Decompsoed additive baseline similarity
+\[
+\frac{cos(sbj1,sbj2) + cos(vrb1,vrb2)) + cos(obj1,obj2)}{3}
+\]
+
+Can any of the NLP sentence similarities decompose? It does not seem so, for example
+\begin{eqnarray*}
+cos(sbj1+verb1,sbj2+vrb2) &\neq& cos(sbj1, sbj2) + cos(vrb1,vrb2) \\
+cos(sbj1\odot verb1,sbj2+vrb2) &\neq& cos(sbj1, sbj2) \odot cos(vrb1,vrb2)
+\end{eqnarray*}
+For kronecker composition has to move between vector of different tensor rank, i.e. either from $V$ to $V \otimes V$ or from the latter to the former. Diagonalization might be helpful here, also convolution kernel might help. 
+
+In general, may be the sentence cosines, do doecompsoe but not in a direct way as above, that is when left and right have the same operation. The operations might vary from lef to right, or the ratios might be preserved etc. 

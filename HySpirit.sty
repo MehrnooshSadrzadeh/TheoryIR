@@ -1,0 +1,362 @@
+% commands and environments useful when working with HySpirit
+
+\newenvironment{hyrelation}[1]{%
+  \begin{tabular}{|l|}
+    \hline
+    \multicolumn{1}{|c|}{#1}\\
+    \hline
+    }{
+    \hline
+  \end{tabular}}
+\newenvironment{longhyrelation}[1]{% allows for page break
+  \begin{longtable}{|l|}
+    \hline
+    \multicolumn{1}{|c|}{#1}\\
+    \hline
+    }{
+    \hline
+  \end{longtable}}
+
+\newenvironment{probhyrelation}[1]{% with probabilities
+  \begin{tabular}{|r||l|}
+    \hline
+    \multicolumn{2}{|c|}{#1}\\
+    \hline
+    }{
+    \hline
+  \end{tabular}}
+\newenvironment{longprobhyrelation}[1]{%
+  \begin{longtable}{|r||l|}
+    \hline
+    \multicolumn{2}{|c|}{#1}\\
+    \hline
+    }{
+    \hline
+  \end{longtable}}
+
+\newenvironment{relation}[1]{
+\begin{hyrelation}{#1}}{\end{hyrelation}}
+\newenvironment{longrelation}[1]{
+\begin{longhyrelation}{#1}}{\end{longhyrelation}}
+\newenvironment{probrelation}[1]{
+\begin{probhyrelation}{#1}}{\end{probhyrelation}}
+\newenvironment{longprobrelation}[1]{
+\begin{longprobhyrelation}{#1}}{\end{longprobhyrelation}}
+
+
+% In the basic format, there are no columns for the attribute values.
+% The format *nicerelation* plots columns for attribute values.
+
+\newenvironment{tabrelation}[2]{%
+  \begin{tabular}{|#2|}\hline}{\hline\end{tabular}}
+\newenvironment{tabprobrelation}[2]{%
+  \begin{tabular}{|r||#2|}\hline}{\hline\end{tabular}}
+
+% More complex to use since multicolumn statements cannot be used.
+% Therefore:
+
+\newenvironment{hynicerelation}[3]{% {term}{2}{l|l}
+  \begin{tabular}{|#3|}
+    \hline
+    \multicolumn{#2}{|c|}{#1}\\
+    \hline
+    }{
+    \hline
+  \end{tabular}}
+\newenvironment{hyniceprobrelation}[3]{% {tf_d}{2}{l|l}
+  \begin{tabular}{|r||#3|}
+    \hline
+    %& \multicolumn{#2}{|c|}{#1}\\
+    \multicolumn{#2}{|c|}{#1}\\
+    \hline
+    }{
+    \hline
+  \end{tabular}}
+
+
+
+\newenvironment{nicerelation}[3]{
+\begin{hynicerelation}{#1}{#2}{#3}}{\end{hynicerelation}}
+\newenvironment{niceprobrelation}[3]{
+\begin{hyniceprobrelation}{#1}{#2}{#3}}{\end{hyniceprobrelation}}
+
+\newenvironment{cnicerelation}[3]{% {2}{l|l}{term}
+\begin{center}
+\begin{hynicerelation}{#3}{#1}{#2}}{%
+\end{hynicerelation}
+\end{center}}
+
+\newenvironment{cniceprobrelation}[3]{% {2}{l|l}{term}
+\begin{center}
+\begin{hyniceprobrelation}{#3}{#1}{#2}}{%
+\end{hyniceprobrelation}
+\end{center}}
+
+
+
+%%%%%%%%%%
+\newcommand{\inputHySpiritRelation}[3]{% {name}{head}{file}
+  \begin{hyrelation}{#1}
+	#2\\
+	\hline \hline
+  \input{#3}
+  \end{hyrelation}
+}
+\newcommand{\inputProbHySpiritRelation}[3]{% {name}{head}{file}
+  \begin{probhyrelation}{#1}
+	#2\\
+	\hline \hline
+  \input{#3}
+  \end{probhyrelation}
+}
+\newcommand{\inputNiceHySpiritRelation}[5]{% {name}{head}{arity}{fmt}{file}
+  \begin{hynicerelation}{#1}{#3}{#4} % e.g. {term}{2}{l|l}
+	#2\\
+	\hline \hline
+  \input{#5}
+  \end{hynicerelation}
+}
+\newcommand{\inputNiceProbHySpiritRelation}[5]{% {name}{head}{arity}{fmt}{file}
+  \begin{hyniceprobrelation}{#1}{#3}{#4}
+	#2\\
+	\hline \hline
+  \input{#5}
+  \end{hyniceprobrelation}
+}
+
+%%% Deprecated
+\newcommand{\relationInput}[6]{% dir, name, head, arity, fmt, file
+  \begin{hynicerelation}{#2}{#4}{#5}
+        #3\\
+	\hline \hline
+	\input{#1/#6}
+  \end{hynicerelation}}
+
+\newcommand{\probRelationInput}[6]{% {dir}{name}{head}{arity}{fmt}{fileName}
+  \begin{hyniceprobrelation}{#2}{#4}{#5}
+        #3\\
+	\hline \hline
+	\input{#1/#6}
+  \end{hyniceprobrelation}}
+%%%%%%%%%%
+
+
+
+%\usepackage{listings} % lstinputlisting, lstdefinestyle
+
+\newcommand{\hycodesize}{\footnotesize}
+% specific settings in HySpiritBook and book-slides.
+%\newenvironment{hycodesize}{\begin{small}}{\end{small}}
+
+
+
+
+\newcommand{\hyprogramInput}[3]{% dir, name, layer
+{\hycodesize\lstinputlisting[style=#3]{#1/#2.#3}}}
+% Motivation for the dir: keep programs nicely tidy in directories
+
+\newcommand{\hyprogramInputMathescape}[3]{% dir, name, layer
+{\hycodesize\lstinputlisting[style=#3,mathescape]{#1/#2.#3}}}
+% Motivation for the dir: keep programs nicely tidy in directories
+
+
+\newcommand{\inputHySpiritProgram}[2]{\hyprogramInput{.}{#1}{#2}}
+\newcommand{\inputHySpiritProgramMathEscape}[2]{\hyprogramInputMathescape{.}{#1}{#2}}
+
+\newcommand{\leftHySpiritProgramWidth}{.47\textwidth}
+\newcommand{\rightHySpiritProgramWidth}{.47\textwidth}
+
+\newcommand{\inputTwoHySpiritPrograms}[4]{% {program1}{fvpd}{program2}{pd}
+\begin{minipage}[t]{\leftHySpiritProgramWidth}
+	\inputHySpiritProgram{#1}{#2}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{\rightHySpiritProgramWidth}
+	\inputHySpiritProgram{#3}{#4}
+\end{minipage}}
+
+\newcommand{\inputTwoAlignedHySpiritPrograms}[3]{% {program}{pra}{pd}
+\begin{minipage}[t]{\leftHySpiritProgramWidth}
+	\inputHySpiritProgram{#1}{#2}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{\rightHySpiritProgramWidth}
+	\inputHySpiritProgram{#1}{#3}
+\end{minipage}}
+
+\newcommand{\inputThreeAlignedHySpiritPrograms}[4]{% {program}{pra}{pd}{psql}
+\begin{minipage}[t]{.29\textwidth}
+	\inputHySpiritProgram{#1}{#2}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{.29\textwidth}
+	\inputHySpiritProgram{#1}{#3}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{.29\textwidth}
+	\inputHySpiritProgram{#1}{#4}
+\end{minipage}}
+
+\newcommand{\inputAlignedHySpiritPrograms}[3]{%
+\inputTwoAlignedHySpiritPrograms{#1}{#2}{#3}}
+
+
+% Make HySpirit Programs the default; remove if you work with other programs.
+\newcommand{\programInput}[3]{\hyprogramInput{#1}{#2}{#3}}
+\newcommand{\inputProgram}[2]{\inputHySpiritProgram{#1}{#2}}
+
+
+
+\lstdefinestyle{XML}{%
+language=XML,
+numbers=left,
+stepnumber=1,
+breaklines=true,
+frame=single,
+%framexleftmargin=4ex,
+%columns=fullflexible,
+flexiblecolumns=true,
+numberblanklines=false,
+showstringspaces=false}
+
+\lstdefinestyle{SQL}{%
+language=SQL,
+numbers=left,
+stepnumber=1,
+breaklines=true,
+frame=single,
+%framexleftmargin=4ex,
+%columns=fullflexible,
+flexiblecolumns=true,
+numberblanklines=false,
+showstringspaces=false}
+
+\lstdefinestyle{PSQL}{%
+language=PSQL,
+numbers=left,
+stepnumber=1,
+breaklines=true,
+frame=single,
+%framexleftmargin=4ex,
+%columns=fullflexible,
+flexiblecolumns=true,
+numberblanklines=false,
+showstringspaces=false}
+
+\lstdefinestyle{PD}{%
+language=PRA,
+numbers=left,
+stepnumber=1,
+breaklines=true,
+frame=single,
+%framexleftmargin=4ex,
+%columns=fullflexible,
+flexiblecolumns=true,
+numberblanklines=false,
+showstringspaces=false}
+
+\lstdefinestyle{FVPD}{%
+language=PRA,
+numbers=left,
+stepnumber=1,
+breaklines=true,
+frame=single,
+%framexleftmargin=4ex,
+%columns=fullflexible,
+flexiblecolumns=true,
+numberblanklines=false,
+showstringspaces=false}
+
+\lstdefinestyle{PRA}{%
+language=PRA,
+numbers=left,
+stepnumber=1,
+breaklines=true,
+frame=single,
+%framexleftmargin=4ex,
+%columns=fullflexible,
+flexiblecolumns=true,
+numberblanklines=false,
+showstringspaces=false}
+
+\lstdefinestyle{POOL}{%
+language=PRA,
+numbers=left,
+stepnumber=1,
+breaklines=true,
+frame=single,
+%framexleftmargin=4ex,
+%columns=fullflexible,
+flexiblecolumns=true,
+numberblanklines=false,
+showstringspaces=false}
+
+\lstset{style=PSQL}
+\lstset{style=PD}
+
+
+\newenvironment{hycode}{%
+\begin{alltt}TODO: USE LISTING ENVIRONMENT FOR CODE\hycodesize}{\end{alltt}}
+
+
+
+
+\@ifdefinable\hycodelisting{
+\newenvironment{hycodelisting}[1]{%
+\lstset{style=#1}
+\begin{hycodesize}}{%
+\end{hycodesize}}}
+
+%%% This env does not work???
+%%% begin{lstlisting} seems to cause trouble.
+\newenvironment{hycodelstlisting}[1]{%
+\lstset{style=#1}
+%\begin{hycodesize}
+\begin{lstlisting}
+\hcodesize
+}{%
+\end{lstlisting}
+%\end{hycodesize}
+}
+
+%%% Same env's for type setting of languages (code).
+
+\newenvironment{xml}{\begin{alltt}\hycodesize}{\end{alltt}}
+\newenvironment{rss}{\begin{alltt}\hycodesize}{\end{alltt}}
+\newenvironment{rdf}{\begin{alltt}\hycodesize}{\end{alltt}}
+\newenvironment{json}{\begin{alltt}\hycodesize}{\end{alltt}}
+
+\newenvironment{pool}{\begin{hycodelisting}{pool}}{\end{hycodelisting}}
+\newenvironment{fvpd}{\begin{hycodelisting}{fvpd}}{\end{hycodelisting}}
+\newenvironment{pd}{\begin{hycodelisting}{pd}}{\end{hycodelisting}}
+\newenvironment{psql}{\begin{hycodelisting}{psql}}{\end{hycodelisting}}
+\newenvironment{pra}{\begin{hycodelisting}{pra}}{\end{hycodelisting}}
+\newenvironment{sql}{\begin{hycodelisting}{sql}}{\end{hycodelisting}}
+
+\newenvironment{poolcode}{\begin{hycodelisting}{pool}}{\end{hycodelisting}}
+\newenvironment{fvpdcode}{\begin{hycodelisting}{fvpd}}{\end{hycodelisting}}
+\newenvironment{pdcode}{\begin{hycodelisting}{pd}}{\end{hycodelisting}}
+\newenvironment{psqlcode}{\begin{hycodelisting}{psql}}{\end{hycodelisting}}
+\newenvironment{pracode}{\begin{hycodelisting}{pra}}{\end{hycodelisting}}
+\newenvironment{sqlcode}{\begin{hycodelisting}{sql}}{\end{hycodelisting}}
+
+%\newenvironment{mds}{\begin{code}}{\end{code}}
+
+\newenvironment{poollisting}{%
+\lstset{style=POOL}\begin{lstlisting}\hycodesize}{\end{lstlisting}}
+\newenvironment{fvpdlisting}{%
+\lstset{style=FVPD}\begin{lstlisting}\hycodesize}{\end{lstlisting}}
+\newenvironment{pdlisting}{%
+\lstset{style=PD}\begin{lstlisting}\hycodesize}{\end{lstlisting}}
+\newenvironment{pralisting}{%
+\lstset{style=PRA}\begin{lstlisting}\hycodesize}{\end{lstlisting}}
+\newenvironment{psqllisting}{%
+\lstset{style=PSQL}\begin{lstlisting}\hycodesize}{\end{lstlisting}}
+% Why does this not work???
+
+
+\newcommand{\poolProgramInput}[1]{\lstinputlisting[style=POOL]{#1}}
+\newcommand{\fvpdProgramInput}[1]{\lstinputlisting[style=FVPD]{#1}}
+\newcommand{\pdProgramInput}[1]{\lstinputlisting[style=PD]{#1}}
+\newcommand{\psqlProgramInput}[1]{\lstinputlisting[style=PSQL]{#1}}
+\newcommand{\praProgramInput}[1]{\lstinputlisting[style=PRA]{#1}}

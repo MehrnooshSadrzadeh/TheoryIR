@@ -1,0 +1,79 @@
+% thor ir math: Thomas Roelleke IR Math
+% See also thormath.sty.
+% In thormath.sty, all macros start with specific prefix "trm":
+% trm: thomas roelleke math
+% Here, in thorirmath.sty, mostly general names such as \tf and \idf.
+% Therefore, might have conflicts with other style files.
+
+\newcommand{\thoriroperatorname}[1]{\operatorname{#1}}
+\renewcommand{\thoriroperatorname}[1]{\textmd{#1}}
+%\renewcommand{\thoriroperatorname}[1]{\emph{#1}}
+	%%% REMEMBER: emph does not work in math mode
+	%%% pdflatex presentation.tex
+	%%% ! LaTeX Error: Command \itshape invalid in math mode.
+
+%\renewcommand{\thoriroperatorname}[1]{\mathrm{#1}}
+%\renewcommand{\thoriroperatorname}[1]{{\rm #1}}
+
+\newcommand{\tf}{\thoriroperatorname{tf}}
+\newcommand{\tfsum}{\thoriroperatorname{tf_\textmd{sum}}}
+\newcommand{\tfmax}{\thoriroperatorname{tf_\textmd{max}}}
+\newcommand{\tffrac}{\thoriroperatorname{tf_\textmd{frac}}} % tf/(tf+K)
+\newcommand{\tfpoissona}{\thoriroperatorname{tf_\textmd{poissona}}}
+	% a special tf_frac; K is set based on document stats only!
+	% boost documents with distinct terms
+	% i.e. penalise documents where avgtf(d) is high
+	% avgtf(d) = dl / #terms
+	% e.g.:
+%(sailing, doc_1)
+%(boats, doc_1)
+%(sailing, doc_1) # second
+%(greece, doc_1)
+%(sailing, doc_1) # third
+%(boats, doc_1)
+	% 6 tuples, #terms=3, avgtf(d)=2
+	% K = avgtf(d)
+	% Compare to the usual setting based on collection-wide stats:
+	% K = dl/avgdl
+\newcommand{\tflifted}{\thoriroperatorname{tf_\textmd{lifted}}}
+\newcommand{\tfpivoted}{\thoriroperatorname{tf_\textmd{pivoted}}}
+
+\newcommand{\tfn}{\thoriroperatorname{tfn}} % tf normalised
+
+\newcommand{\avgtf}{\thoriroperatorname{avgtf}}
+
+\newcommand{\df}{\thoriroperatorname{df}}
+\newcommand{\avgdl}{\thoriroperatorname{avgdl}}
+\newcommand{\pivdl}{\thoriroperatorname{pivdl}}
+\newcommand{\dl}{\thoriroperatorname{dl}}
+\newcommand{\qf}{\thoriroperatorname{qf}}
+\newcommand{\avgql}{\thoriroperatorname{avgql}}
+\newcommand{\pivql}{\thoriroperatorname{pivql}}
+\newcommand{\ql}{\thoriroperatorname{ql}}
+
+\newcommand{\idf}{\thoriroperatorname{idf}}
+\newcommand{\pidf}{\thoriroperatorname{pidf}}
+\newcommand{\IDF}{\thoriroperatorname{IDF}}
+\newcommand{\iqf}{\thoriroperatorname{idf}}
+\newcommand{\piqf}{\thoriroperatorname{piqf}}
+\newcommand{\IQF}{\thoriroperatorname{IQF}}
+
+\newcommand{\TF}{\thoriroperatorname{TF}}
+\newcommand{\TFIDF}{\thoriroperatorname{TF-IDF}}
+\newcommand{\LM}{\thoriroperatorname{LM}}
+\newcommand{\BMtwentyfive}{\thoriroperatorname{BM25}}
+
+\newcommand{\RSV}{\thoriroperatorname{RSV}}
+\newcommand{\DQI}{\thoriroperatorname{DQI}}
+
+\newcommand{\tinforms}{\textmd{$t$ informs}}
+\newcommand{\toccurs}{\textmd{$t$ occurs}}
+
+\newcommand{\maxidf}{\thoriroperatorname{maxidf}}
+\newcommand{\maxdf}{\thoriroperatorname{maxdf}}
+\newcommand{\maxtf}{\thoriroperatorname{maxtf}}
+
+
+
+\newcommand{\rankeq}{\mbox{$\,\stackrel{\rm rank}{=}\,$}}
+\newcommand{\scoreeq}{\mbox{$\stackrel{\rm score}{=}$}}

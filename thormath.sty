@@ -1,0 +1,199 @@
+% thormath.sty
+% Macros for the consistent setting of selected formulae.
+% All macros start with prefix: "trm".
+% trm: thomas roelleke math
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Algebra
+\newcommand{\trmdiff}[1]{\;{\rm d#1}}
+
+\newcommand{\trmratio}[2]{\frac{#1}{#1+#2}}
+
+\newcommand{\trmExponentFunction}[2]{\left(1+\frac{#1}{#2}\right)^{#2}} % {x}{n}
+
+\newcommand{\trmlogit}[1]{\ln\left(\frac{#1}{1-#1}\right)}
+	% log [ P(t)/(1-P(t)) ]
+
+\newcommand{\trmHarmonicSum}[1]{%
+1 + \frac{1}{2} + \ldots + \frac{1}{#1}}
+\newcommand{\trmHarmonicSumOfFactorials}[1]{%
+1 + \frac{1}{2!} + \ldots + \frac{1}{#1!}}
+\newcommand{\trmLongHarmonicSum}[1]{%
+1 + \frac{1}{2} + \frac{1}{3} + \ldots + \frac{1}{#1}}
+
+\newcommand{\trmCompactHarmonicSum}[1]{%
+1 \!+\! \frac{1}{2} \!+\! \ldots \!+\! \frac{1}{#1}}
+
+\newcommand{\trmHarmonicNumbers}[1]{%
+1, \sum_{i=1}^2 \frac{1}{i}, \ldots, \sum_{i=1}^n \frac{1}{i}}
+
+\newcommand{\trmHarmonicNumbersOneToTen}{%
+1, 1.5, 1.833, 2.083,
+	% +0.2
+	2.283,
+	% +0.167
+	2.45,
+	% +0.143
+	2.593,
+	% +0.125
+	2.718, % H(8) approx e
+	% +0.111
+	2.829
+	% +0.1
+	2.929}
+
+\newcommand{\trmFactorialHarmonicSum}[1]{% {n}
+1 + \frac{1}{2!} + \frac{1}{3!} + \ldots + \frac{1}{n!}}
+\newcommand{\trmLongFactorialHarmonicSum}[1]{% {n}
+1 + \frac{1}{1 \cdot 2} + \frac{1}{1\cdot 2 \cdot 3} +
+		\ldots + \frac{1}{1 \cdot 2 \cdot 3 \cdot \ldots \cdot n}}
+
+\newcommand{\trmGeneralisedHarmonicSum}[2]{% {\alpha}{n}
+1 + \frac{1}{2^{#1}} + \ldots + \frac{1}{#2^{#1}}}
+\newcommand{\trmGeneralisedLongHarmonicSum}[2]{% {\alpha}{n}
+1 + \frac{1}{2^{#1}} + \frac{1}{3^{#1}} + \ldots + \frac{1}{#2^{#1}}}
+\newcommand{\trmLongGeneralisedHarmonicSum}[2]{% {\alpha}{n}
+1 + \frac{1}{2^{#1}} + \frac{1}{3^{#1}} + \ldots + \frac{1}{#2^{#1}}}
+
+\newcommand{\trmHarmonicDefiniteIntegralStart}[3]{% {\alpha}{x}{1}
+\int_{#3}^{#2}\frac{1}{z^#1}\trmdiff{z}}
+
+\newcommand{\trmHarmonicDefiniteIntegral}[2]{% {\alpha}{x}
+\trmHarmonicDefiniteIntegralStart{#1}{#2}{1}}
+
+\newcommand{\trmHarmonicDefiniteIntegralSolutionFromTo}[2]{% {\alpha}{x}
+\frac{1}{1-#1} \cdot \left[z^{1-#1}\right]_1_{#2}}
+
+\newcommand{\trmHarmonicDefiniteIntegralSolution}[2]{% {\alpha}{x}
+\frac{1}{1-#1} \cdot \left(#2^{1-#1} - 1\right)}
+
+
+
+\newcommand{\trmCompactGeneralisedHarmonicSum}[2]{%
+1 \!+\! \frac{1}{2^{#1}} \!+\! \ldots \!+\! \frac{1}{#2^{#1}}}
+
+\newcommand{\trmGaussianHarmonicSum}[1]{%
+1 + \frac{1}{1+2} + \ldots + \frac{1}{1+2+\ldots+#1}}
+\newcommand{\trmCompactGaussianHarmonicSum}[1]{%
+1 \!+\! \frac{1}{1\!+\!2} \!+\! \ldots \!+\! \frac{1}{1\!+\!\ldots\!+\!#1}}
+\newcommand{\trmLongGaussianHarmonicSum}[1]{%
+1 \!+\! \frac{1}{1\!+\!2\!+\!3} \!+\! \ldots \!+\!
+		\frac{1}{1\!+\!2\!+\!3\!+\!\ldots\!+\!#1}}
+
+\newcommand{\trmGaussianFunctionHarmonicSum}[1]{%
+1 + \frac{1}{G(2)} + \ldots + \frac{1}{G(#1)}}
+\newcommand{\trmGaussianFunctionHarmonicSumSum}[1]{%
+\sum_{k=1}^{n}\frac{1}{G(k)}}
+\newcommand{\trmCompactGaussianFunctionHarmonicSum}[1]{%
+1 \!+\! \frac{1}{G(2)} \!+\! \ldots \!+\! \frac{1}{G(#1)}}
+
+\newcommand{\trmGaussianSum}[1]{1+2+\ldots+#1}
+\newcommand{\trmGaussianSummationFunction}[1]{%
+\frac{#1}{2} \cdot \left(#1+1\right) = \trmGaussianSum{#1}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Probability Theory
+
+\newcommand{\trmLaplaceLaw}[4]{%
+\frac{#1 + #3}{#2 + #4}}
+
+\newcommand{\trmGeneralisedBinomialProbBodyFun}[5]{% {n}{p}{k}{\ln(k)}{\ln(n-k)}
+\binom{#1}{#3} \cdot #2^{#4} \cdot \left(1-#2\right)^{#5}}
+
+% 1/Omega * ...
+\newcommand{\trmGeneralisedBinomialProbBody}[6]{%
+	% {n}{p}{k}{\ln(k)}{\ln(n-k)}{\Omega}
+\frac{1}{#6} \cdot \trmGeneralisedBinomialProbBodyFun{#1}{#2}{#3}{#4}{#5}}
+
+\newcommand{\trmGeneralisedBinomialProb}[6]{% {n}{p}{k}{p^#4}{(1-p)^#5}{\Omega}
+P_{\textmd{binomial, generalised},#1,#2}(#3) :=
+	\trmGeneralisedBinomialProbBody{#1}{#2}{#3}{#4}{#5}{#6}}
+
+\newcommand{\trmBinomialSumBodyOne}[3]{% {n}{k}{expr}
+\binom{#1}{#2} \cdot #3^{#2}}
+
+\newcommand{\trmBinomialSumBody}[4]{% {n}{k}{a}{b}
+\binom{#1}{#2} \cdot #3^{#2} \cdot #4^{\left(#1-#2\right)}}
+
+\newcommand{\trmBinomialProbBody}[3]{% {n}{p}{k}
+%\binom{#1}{#3} \cdot #2^{#3} \cdot \left(1-#2\right)^{\left(#1-#3\right)}
+\trmBinomialSumBody{#1}{#3}{#2}{\left(1-#2\right)}
+}
+
+\newcommand{\trmBinomialSumOne}[3]{% {n}{k}{expr}
+\sum_{#2=0}^{#1} \trmBinomialSumBodyOne{#1}{#2}{#3}}
+\newcommand{\trmBinomialSum}[3]{% {n}{k}{expr}
+\sum_{#2=0}^{#1} \trmBinomialSumBody{#1}{#2}{#3}}
+
+
+\newcommand{\trmHarmonicBinomialProbBody}[3]{% {n}{p}{k}
+\trmGeneralisedBinomialProbBody{#1}{#2}{#3}{%
+\textmd{harm\_num}_\alpha(#3)}{\textmd{harm\_num}_\alpha(#1-#3)}{\Omega}}
+
+\newcommand{\trmHarmonicBinomialProb}[3]{% {n}{p}{k}
+P_{\textmd{binomial, harmonic},#1,#2,\alpha}(#3) :=
+	\trmHarmonicBinomialProbBody{#1}{#2}{#3}}
+\newcommand{\trmIndependentBinomialProb}[3]{% {n}{p}{k}
+P_{\textmd{binomial, independendent},#1,#2}(#3) :=
+	\trmBinomialProbBody{#1}{#2}{#3}}
+
+\newcommand{\trmBinomialProb}[3]{% {n}{p}{k}
+P_{\textmd{binomial},#1,#2}(#3) :=
+	\trmBinomialProbBody{#1}{#2}{#3}}
+
+\newcommand{\trmBinomialTheorem}[2]{%
+\left(#1+#2\right)^n = % a^k b^{n-k}
+	\sum_{k=0}^{n}\trmBinomialSumBody{n}{k}{#1}{#2}
+}
+
+\newcommand{\trmPoissonProbBody}[2]{% {alpha}{k}
+\frac{#1^{#2}}{#2!} \cdot e^{-#1}}
+%%% 28/09/2013: Was e^{#1}: Mistake in M&C book, DFR-2 Poisson, page 72???
+%%% Was corrected somehow???
+
+\newcommand{\trmPoissonProb}[2]{% {alpha}{k}
+P_{\textmd{Poisson},#1}(#2) := \trmPoissonProbBody{#1}{#2}}
+
+
+\newcommand{\trmGeometricProbBody}[2]{% {p}{k}
+\left(1-#1\right)^{#2} \cdot #1}
+
+
+\newcommand{\trmPowerLawFunction}[2]{% {alpha}{k}
+f_{\textmd{PL},#1}(#2) := \frac{1}{#2^{#1}}}
+
+
+\newcommand{\trmStirling}[1]{%
+\left(\frac{#1}{e}\right)^#1 \cdot \sqrt{2 \cdot \pi \cdot k}}
+\newcommand{\trmlnStirling}[1]{%
+#1 \cdot \ln(#1) - #1 + 1/2 \cdot \ln(2 \cdot \pi \cdot k)}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Information Theory
+\newcommand{\trmKLDivergence}[2]{%
+D_\textmd{KL}(#1||#2)}
+\newcommand{\trmKLDivergenceBody}[3]{% {x}{P_1(x)}{P_2(x)}
+\sum_{#1} #2 \cdot \log\frac{#2}{#3}}
+
+
+\newcommand{\trmEntropy}[1]{%
+H(#1)}
+\newcommand{\trmEntropyBody}[2]{%
+\sum_{#1} #2 \cdot -\log #2}
+
+\newcommand{\trmCrossEntropy}[2]{%
+H_\textmd{cross}(#1;#2)}
+\newcommand{\trmCrossEntropyBody}[3]{% {x}{P_1(x)}{P_2(x)}
+\sum_{#1} #2 \cdot -\log #3}
+
+\newcommand{\trmJointEntropy}[2]{%
+H_\textmd{joint}(#1,#2)}
+\newcommand{\trmJointEntropyBody}[3]{% {x}{y}{P(x,y)}
+\sum_{#1,#2} #3 \cdot -\log #3}
+
+\newcommand{\trmConditionalEntropy}[2]{%
+H(#1||#2)}
+\newcommand{\trmConditionalEntropyBody}[4]{% {x}{y}{P(x)}{P(x,y)}
+\sum_{#1,#2} #4 \cdot -\log\frac{#3}{#4}}

@@ -1,0 +1,114 @@
+\ProvidesFile{lstlang0.sty}
+    [2004/09/05 1.3 listings language file]
+%%
+%% PSQL definition (c) 2008 Hany Azzam
+%%                 (c) 2008 Thomas Roelleke
+%%
+\lst@definelanguage{PSQL}%
+  {morekeywords={%
+      %BAYES,% not a keyword in PSQL
+	% aggregation assumptions
+      DISJOINT,INDEPENDENT,SUBSUMED,% traditional assumptions
+      SUM,XOR,OR,MAX,% synonyms of the above assumptions
+      PROD,MIN,%
+      EUCLIDEAN,%
+      COMPLEMENT,COMP,INVERSE,INV,% PRA Project: 1-P(tau), 1/P(tau)
+      SQUARE,SQRT,% PRA Project
+      STRICT,% PRA Subtract(a,b): Discard tuples that occur in "b"
+      MIXED,FRAC,FRACTIONAL,RATIONAL,EXPONENTIAL,% MIXED is general; synonym of FRAC.
+      EVIDENCE_KEY,EVIDENCE,KEY,%
+	% estimation assumptions
+      ASSUMPTION,%
+      DocFreq,DOC_FREQ,DF,%
+      ValFreq,VAL_FREQ,VF,ValueFreq,VALUE_FREQ,VF,%
+      LocFreq,LOC_FREQ,LF,LocationFreq,%
+      TermFreq,TERM_FREQ,TF,%
+      TupleFreq,TUPLE_FREQ,TF,%
+      LOG,MAX_LOG,SUM_LOG,%
+      MAX_ILF,SUM_ILF,MAX_ITF,SUM_ITF,%
+      MAX_IDF,SUM_IDF,MAX_IVF,SUM_IVF,%
+      INFORMATIVE,% synonym of MAX_IDF
+      TOP,% NOT IN SQL?
+      FUZZY,FOCAL,GE,LE,LT,GT,EQ,NE,PWIDTH,
+      % From here, SQL
+      ABSOLUTE,ACTION,ADD,ALLOCATE,ALTER,ARE,AS,ASSERTION,%
+      AT,BETWEEN,BIT_LENGTH,BOTH,BY,CASCADE,CASCADED,CASE,CAST,%
+      CATALOG,CHAR_LENGTH,CHARACTER_LENGTH,CLUSTER,COALESCE,%
+      COLLATE,COLLATION,COLUMN,CONNECT,CONNECTION,CONSTRAINT,%
+      CONSTRAINTS,CONVERT,CORRESPONDING,CREATE,CROSS,CURRENT_DATE,%
+      CURRENT_TIME,CURRENT_TIMESTAMP,CURRENT_USER,DAY,DEALLOCATE,%
+      DEC,DEFERRABLE,DEFERED,DESCRIBE,DESCRIPTOR,DIAGNOSTICS,%
+      DISCONNECT,DOMAIN,DROP,ELSE,END,EXEC,EXCEPT,EXCEPTION,EXECUTE,%
+      EXTERNAL,EXTRACT,FALSE,FIRST,FOREIGN,FROM,FULL,GET,GLOBAL,%
+      GRAPHIC,HAVING,HOUR,IDENTITY,IMMEDIATE,INDEX,INITIALLY,INNER,%
+      INPUT,INSENSITIVE,INSERT,INTO,INTERSECT,INTERVAL,%
+      ISOLATION,JOIN,KEY,LAST,LEADING,LEFT,LEVEL,LIMIT,LOCAL,LOWER,%
+      MATCH,MINUTE,MONTH,NAMES,NATIONAL,NATURAL,NCHAR,NEXT,NO,NOT,NULL,%
+      NULLIF,OCTET_LENGTH,ON,ONLY,ORDER,ORDERED,OUTER,OUTPUT,OVERLAPS,%
+      PAD,PARTIAL,POSITION,PREPARE,PRESERVE,PRIMARY,PRIOR,READ,%
+      RELATIVE,RESTRICT,REVOKE,RIGHT,ROWS,SCROLL,SECOND,SELECT,SESSION,%
+      SESSION_USER,SIZE,SPACE,SQLSTATE,SUBSTRING,SYSTEM_USER,%
+      TABLE,TEMPORARY,THEN,TIMEZONE_HOUR,%
+      TIMEZONE_MINUTE,TRAILING,TRANSACTION,TRANSLATE,TRANSLATION,TRIM,%
+      TRUE,UNIQUE,UNKNOWN,UPPER,USAGE,USING,VALUE,VALUES,%
+      VARGRAPHIC,VARYING,WHEN,WHERE,WRITE,YEAR,ZONE,%
+      AND,ASC,avg,CHECK,COMMIT,count,DECODE,DESC,DISTINCT,GROUP,IN,% FF
+      LIKE,NUMBER,ROLLBACK,SUBSTR,sum,VARCHAR2,% FF
+      MIN,MAX,UNION,UPDATE,% RF
+      ALL,ANY,CUBE,CUBE,DEFAULT,DELETE,EXISTS,GRANT,OR,RECURSIVE,% DJ
+      ROLE,ROLLUP,SET,SOME,TRIGGER,VIEW},% DJ
+   morendkeywords={BIT,BLOB,CHAR,CHARACTER,CLOB,DATE,DECIMAL,FLOAT,% DJ
+   ROLE,ROLLUP,SET,SOME,TRIGGER,VIEW},% DJ
+   morendkeywords={BIT,BLOB,CHAR,CHARACTER,CLOB,DATE,DECIMAL,FLOAT,% DJ
+      INT,INTEGER,NUMERIC,SMALLINT,TIME,TIMESTAMP,VARCHAR},% moved here
+   sensitive=false,% DJ
+   morecomment=[l]--,%
+   morecomment=[s]{/*}{*/},%
+   morestring=[d]',%
+   morestring=[d]"%
+  }[keywords,comments,strings]%
+%%
+%% PRA definition (c) 2008 Hany Azzam
+%%                 (c) 2008 Thomas Roelleke
+%%
+\lst@definelanguage{PRA}%
+  {morekeywords={%
+	% Operators
+      SELECT,PROJECT,JOIN,UNITE,SUBTRACT,BAYES,%
+      LEFTJOIN,RIGHTJOIN,INNERJOIN,OUTERJOIN,MULTIPLY,%
+      NATURALJOIN,%
+      ENTROPYJOIN,EJOIN,%
+	% Traditional assumptions
+      DISJOINT,INDEPENDENT,SUBSUMED,%
+      SUM,XOR,OR,MAX,% SUM and XOR are synonyms of DISJOINT
+			% OR is INDEPENDENT
+			% MAX is SUBSUMED
+      ALL,DISTINCT,% Usually, INDEPENDENT is the default for DISTINCT
+	% Non-traditional assumptions (aggregation)
+      PROD,MIN,%
+      EUCLIDEAN,%
+      LOG,MAX_LOG,SUM_LOG,% logarithmic assumptions
+	% Non-traditional assumptions (estimation)
+      DocFreq,DOC_FREQ,DF,%
+      ValFreq,VAL_FREQ,VF,ValueFreq,VALUE_FREQ,VF,%
+      LocFreq,LOC_FREQ,LF,LocationFreq,%
+      TermFreq,TERM_FREQ,TF,%
+      TupleFreq,TUPLE_FREQ,TF,%
+      MAX_ITF,MAX_ILF,SUM_ITF,SUM_ILF,% TupleFreq, LocationFreq
+      MAX_IVF,MAX_IDF,SUM_IVF,SUM_IDF,%
+      %IVF,IDF,% Well, better use MAX_IVF and MAX_IDF
+      MIX,MIXED,FRAC,FRACTIONAL,RAIO,RATIONAL,BM25,EXPONENTIAL,POWER,%
+      STRICT,% SUBTRACT
+      FIRST,% PROJECT: efficient version of DISTINCT
+      SQUARE,SQRT,% PROJECT
+      COMPLEMENT,COMP,INVERSE,INV},%
+%   morendkeywords={BIT,BLOB,CHAR,CHARACTER,CLOB,DATE,DECIMAL,FLOAT,%
+%      INT,INTEGER,NUMERIC,SMALLINT,TIME,TIMESTAMP,VARCHAR},%
+   sensitive=false,% DJ
+   morecomment=[l]--,%
+   morecomment=[l]\#,%
+   morecomment=[s]{/*}{*/},%
+   morestring=[d]',%
+   morestring=[d]"%
+  }[keywords,comments,strings]%
+\endinput
