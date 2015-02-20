@@ -38,6 +38,37 @@ HELLO
 \[
 P(q|d) = \sum_t P(q|t) \cdot P(t|d)
 \]
+Rewrite as follows:
+\[
+P(q|d) = \frac{1}{P(d)} \cdot \sum_t P(q|t) \cdot P(d|t) \cdot P(t)
+\]
+
+The reformulation helps
+to make $\vec{d}$ and $\vec{q}$ having the same semantics:
+\[
+\vec{d} =
+	\left(
+	\begin{matrix}
+	P(d|t_1)\\
+	P(d|t_2)\\
+	P(d|t_3)\\
+	\end{matrix}
+	\right)
+\]
+Generalised inner product:
+\[
+\vec{d}^T \cdot G \cdot \vec{q}
+\]
+\[
+G=
+\left[
+\begin{matrix}
+P(t_1) \\
+0 & P(t_2) \\
+0 & 0 & P(t_3) \\
+\end{matrix}
+\right]
+\]
 
 
 %The starting point of this approach is the  window-based  vector space models of natural language \cite{Schutze}, also referred to by \emph{distributional} models of meaning. These are inspired by  the vector space models of  Information Retrieval \cite{Salton}. In IR, terms are vectors whose coordinates are their degree of appearance in documents, and symmetrically documents can also be seen as vectors whose coordinates are the degree of appearance of words in them. The vector spaces in which meanings of words live have documents as basis vectors. These models have been used to retrieve documents that are relevant to a query, seen as a collection of terms (words). The window-based vector space models are slightly different, herein,  basis vectors are other words (sometimes also referred to by context words or features). In such models, one fixes a neighbourhood window of $k$ words (e.g. $k = 5$) then computes the degree of co-occurrence of a word with other words within that window. Hence, each words will have a vectors and the distance between the word vectors can be used to reason about their  similarity of meanings. The origins of this work and its application to word meaning, similarity, and disambiguation  goes back to the work of Schutze. Later various different normalisation schemes and distances were established and experimented with and it turned out the the cosine of the angle between the vectors is a good measure of similarity, e.g. see \cite{BullerinaLevy,Curran}. 
