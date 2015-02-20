@@ -110,12 +110,12 @@ IGNORE+=$(MAIN).tgz
 cvsignore::
 	test -f .$@ || echo $(IGNORE) > .$@
 
-commit::
+cvs_commit::
 	cvs -q -d $(CVSROOT) commit
-update::
+cvs_update::
 	cvs -q -d $(CVSROOT) update
 
-cvs-add::
+cvs_add::
 	cvs add -d $(CVSROOT) $(MAIN).{tex,sty} .cvsignore Makefile*
 
 import::
