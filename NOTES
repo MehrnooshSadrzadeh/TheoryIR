@@ -1,0 +1,39 @@
+1.	Create a new local folder in your laptop
+
+2.	While in this folder, type:
+git init
+to turn the folder into git repository
+
+3.	Type:
+
+git remote add <name> <URL>
+where <URL> is   https://github.com/MehrnooshSadrzadeh/TheoryIR 
+And <name> is some name you want to give the remote copy, let's say TIR
+
+4.	Type:
+
+git pull TIR master
+to get the files locally
+
+5.	Do your edits on these files and within the folder, once done
+
+6.	Type
+
+git commit -a -m 'some message'
+
+7.	Now try to change something in some file and then try to push your changes:
+
+git push TIR master
+
+8.	If git asks for a pull, then type:
+
+git pull TIR master
+
+		and then repeat the push:
+
+git push TIR master
+
+
+====
+git remote add TIR https://github.com/MehrnooshSadrzadeh/TheoryIR
+git pull TIR master
