@@ -10,7 +10,7 @@
 Depending on the co-occurrence quantification, and depending on the composition for s-v-o, for some expressions, one  gets equivalences between geometric and probabilistic (and information-theoretic) expressions.
 
 
-HELLO
+\subsection{Vectors and Probabilities}
 
 \cite{Wong/Yao:95}:
 \[
@@ -38,6 +38,7 @@ HELLO
 \[
 P(q|d) = \sum_t P(q|t) \cdot P(t|d)
 \]
+
 Rewrite as follows:
 \[
 P(q|d) = \frac{1}{P(d)} \cdot \sum_t P(q|t) \cdot P(d|t) \cdot P(t)
@@ -68,6 +69,28 @@ P(t_1) \\
 0 & 0 & P(t_3) \\
 \end{matrix}
 \right]
+\]
+
+\subsection{Estimate $P(t)$: Two Event Spaces}
+
+There are two estimates for the probability that term~$t$ occurs.
+The first estimate is based on the total occurrences of term~$t$.
+Let $L$ denote the space of Locations:
+\[
+P_L(t|c) = \frac{n_L(t,c)}{N_L(c)}
+\]
+The second estimate os based on the number of documents:
+\[
+P_D(t|c) = \frac{n_D(t,c)}{N_D(c)}
+\]
+\[
+n_D(t,c) = \{ d | \tf_d > 0 \}
+\]
+
+\subsection{Transformation between Event Spaces}
+Poisson bridge:
+\[
+P_D(t|c) \cdot \avgtf(t,c) = P_L(t|c) \cdot \avgdl(c)
 \]
 
 
