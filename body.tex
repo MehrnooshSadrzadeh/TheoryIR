@@ -79,12 +79,16 @@ Let $L$ denote the space of Locations:
 \[
 P_L(t|c) = \frac{n_L(t,c)}{N_L(c)}
 \]
+\[
+n_L(t,c) = \sum_{d \in D_c} \tf_d
+\]
+
 The second estimate os based on the number of documents:
 \[
 P_D(t|c) = \frac{n_D(t,c)}{N_D(c)}
 \]
 \[
-n_D(t,c) = \{ d | \tf_d > 0 \}
+n_D(t,c) = \{ d \in D_c | \tf_d > 0 \}
 \]
 
 \subsection{Transformation between Event Spaces}
