@@ -103,7 +103,7 @@ C_i = g(freq_k(t,f_i))
 Forgetting about the $i$ indices for a minute, note that 
 
 \begin{equation}
-freq_k(t,f) = {{\sum_f N(t,f)} \over {k}}
+freq_k(t,f_i) = {{\sum_i N(t,f_i)} \over {k}}
 \end{equation}
 
 for $N(t, f)$ the number of times $t$ and $f$ occurred  $k$ words close to each other.  So in DS, one works with the frequency of co-occurrence of terms with features rather than with documents. Hence, if one replaces the $d$'s in equation \ref{tf-idf} with $f$'s, one obtains:
@@ -113,11 +113,38 @@ for $N(t, f)$ the number of times $t$ and $f$ occurred  $k$ words close to each 
 freq_k(t, f) \cdot \log{{m} \over {\mid \{f \in F \mid N(t,f)  \neq 0 \}\mid}}
 \end{equation}
 
+\[
+N(t, f) * log ( m / feature_freq ( t, F ) )
+\]
+
+
+$P_L ( t ) = sum_f N( t, f)  /  sum_{ t' }$
+
+$P_L ( t | F ) = n (t , F) / N ( F )$
+
+$ n ( t , F ) = sum_{f in F} N(t, f)$
+
+
+{\bf Analogy: document  freq and / feature freq}
+
+$N(t,f)$ and $TF(t,d)$
+
+
+
+
+number of Locations term t occurs in / number of Locations
+
+means
+
+number of times a word occurs / length of corpora
+
+$sum_f N(t,f)$
+
 With the right choice of event spaces, one can establish
 
 \begin{eqnarray}
 P(t) &=&  {{\sum_f N(f,t)} \over {kL}} = {{freq_k(t,f)} \over {L}}\\
-P(t | f) &=&  {{\mid \{f \in F \mid N(t,f)  \neq 0 \}\mid} \over {m}}
+P_F (t) &=&  {{\mid \{f \in F \mid N(t,f)  \neq 0 \}\mid} \over {m}}
 \end{eqnarray}
 for $L$ the number of times $t$ occurred in the corpus as a whole.  Hence one can rewrite equation \ref{f-for-d} as
 
