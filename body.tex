@@ -224,7 +224,7 @@ Other normalisation schemes such as conditional probability, LMI, BM25 etc ???
 
 
 
-\section{PMI and TF-IDF}
+\subsection{PMI and TF-IDF}
 
 The PMI is a favourable feature value for the vector-based representation
 of a term.
@@ -297,7 +297,11 @@ Expresses how discriminative the feature is.
 
 
 
+
 \section{Phrases}
+
+Title: Phrase-based
+
 
 In CDS
 
@@ -305,6 +309,32 @@ In CDS
 In IR
 
 
+\subsection{XF-IDF: Scoring Subject-Verb-Object Phrases}
+
+The main idea of XF-IDF \cite{Azzam/etal:SIGMOD:KEYS:2010} is to extend
+TF-IDF towards a ranking model that supports phrases.
+%
+A document is retrieved if it contains at least one of the query phrases.
+%
+The impact of a phrase on the retrieval score is given by the XF-IDF
+weight of a phrase.
+%
+Let $(s,v,o)$ be a subj-verb-obj phrase.
+In more general, this can be a phrase of any length with any structure
+(e.g.~subject, relationship, object), for the for purpose of this paper,
+we focus the discussion on s-v-o phrases.
+%
+Let $\textmd{type}(x,(s,v,o))$ be a function that retuns the type of the component
+of a phrase, i.e.~$\textmd{type}(s,(s,v,o))=\textmd{subject}$.
+
+Then:
+\[
+w_\textmd{XF-IDF}((s,v,o)) :=
+\sum_{x \in \{s,v,o\}} \TF(x,d) \cdot \IDF(x) \cdot P(\textmd{type}(x,(s,v,o)))
+\]
+To illustrate, consider the XF-IDF weight of the phrase ``woman likes sport".
+
+...
 
 \begin{eqnarray}
 \label{tf-idf-phrase}
@@ -312,6 +342,10 @@ In IR
 \textmd{score}(t,d,q) &:=&
 \TF(t,d) \cdot \IDF(t)
 \end{eqnarray}
+
+
+
+
 
 \section{Why the independence measure is best}
 

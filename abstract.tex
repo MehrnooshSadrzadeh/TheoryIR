@@ -1,11 +1,47 @@
-Compositional Distributional Semantics (CDS) and Semantic IR (SIR)  both work with vectors as semantic representations of terms. In CDS  these terms are composed to get semantic representations for phrases, clauses, and sentences of language. In SIR, they are composed  to obtain semantic representations for queries and documents.  Each approach has its own methods of building the original term vectors and  its own methods of composing them.  
-
-
-To evaluate the models, in SIR one  computes a retrieval status value (RSV) based on the  probabilistic dependance between the representations, whereas in CDS  the similarity between the representation is a major measure, this is  computed using    geometric distances between the representations.   
+Compositional Distributional Semantics (CDS) and Semantic IR (SIR)
+both work with vectors as semantic representations of terms.
+--- work with vector-based representations.
 %
+In CDS, these terms are composed to get semantic representations for phrases, clauses, and sentences of language.
+In SIR, they are composed to obtain semantic representations for queries and documents.
+Each approach has its own methods of building the original term vectors and its own methods of composing them. 
+
+To evaluate the models, in SIR one computes a retrieval status value (RSV) based on the probabilistic dependance between the representations, whereas in CDS the similarity between the representation is a major measure, this is computed using geometric distances between the representations.
+
+In this paper we show that despite the apparent differences
+in the methodologies,
+certain equivalences
+between the geometric and probabilistic methods can be established. 
+EXCELLENT
+
+In particular, we show how and when 1) the bag of word vectors of IR and the entity-relationship vectors of semantic SIR become equivalent to the co-occurrence vectors of CDS, 2) the phrase-based TF-IDF formulae of SIR become equivalent to the vector composition operators of CDS, and 3) the cosine similarity measure of CDS can be decomposed and proven to be equivalent the SIR measure of relevance. 
 
 
-In this paper we show that despite the apparent differences in the methodologies,  certain equivalences between the geometric and probabilistic methods can be established. 
+\hrulefill
 
+SUGGESTION: Split abstract into two parts (as is in paper):
+word-based and phrase-based.
 
-In particular, we show how and when  1) the bag of word vectors of IR and the entity-relationship vectors of semantic SIR become equivalent to the  co-occurrence vectors of CDS, 2) the  phrase-based TF-IDF  formulae of  SIR  become equivalent to the vector composition operators of CDS, and 3) the cosine similarity measure of CDS can be decomposed and proven to be equivalent  the SIR measure of relevance. 
+DS and IR both rely on vector-based representations.
+%
+DS measures the similarity between target terms
+(based on a space of feature terms), and IR
+measures the similarity between documents
+(based on a space of terms).
+%
+We explore in this paper the dualities between the apparantly different
+methodologies.
+
+The main findings include that one of the most common and successful
+approaches in DS,
+namely the PMI between target term and feature term, can be shown to be
+closely related to the probabilistic roots of TF-IDF.
+
+UP TO HERE, word-based. Next, phrases.
+
+\hrulefill
+
+In addition to the word-based similarity, this paper expands on the relationship
+between compositional DS (CDS) and semantic IR (SIR).
+%
+For selected CDS similarity measures, ...
