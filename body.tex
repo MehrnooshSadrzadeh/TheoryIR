@@ -90,7 +90,7 @@ In DS, given is a corpus of text in which one works with the frequency of co-occ
 
 \begin{enumerate}
 \item   Replace the notion of a  \emph{document}  with the notion of  \emph{feature}, 
-\item  Replace the notion of `a term being in a document'  with the notion of `a term occurring $k$ words close to a feature'.  
+\item  Replace the notion of `a term being in a document'  with the notion of `a term occurring $k$ words close to a feature'.  In other words,  the  simple co-occurrence concept `within document' is replaced with the window-based co-occurrence concept of  `$k$-closed to feature'. 
 \end{enumerate}
 
 Doing these replacements in the TF-IDF formula of equation  \label {tf-idf} provides us with an analogous notion:   TF-IFF, defined as follows:
@@ -110,14 +110,19 @@ where we have
 
 \end{definition}
 
-To go from the TF-IFF to probabilities, one has to have event spaces.  In  \cite{ThomasBook} appropriate notation and methodology is introduced is to make this passage for TF-IDF. Here we just use those and change `document' to `feature' where appropriate.  These are as follows:
+To go from the TF-IFF to probabilities, one has to have event spaces.  In  \cite{ThomasBook} appropriate notation and methodology is introduced to make this passage for TF-IDF. Here we just use those and change `document' to `feature' where appropriate.  These are as follows:
 
 \begin{itemize}
 \item $n_F(t,c)$: number of features,  from corpus c,  $k$- close to which term t occurs.
 \item $n_L(t,c)$: number of times term $t$ occurs in corpus $c$.
+\item $N_L(f)$: number of locations $k$-close to feature $f$ (number of features times 2).
 \end{itemize}
 
+Using  these, we define probabilities:
 
+\begin{itemize}
+\item $P_L(t \mid f) := \frac{n_L(t,f)}{N_L(f)}$: location-based $k$-close to feature term probability
+\end{itemize}
 
 ********OLD PART ****
 
@@ -149,9 +154,8 @@ for $N(t, f)$ the number of times $t$ and $f$ occurred  $k$ words close to each 
 freq_k(t, f) \cdot \log{{m} \over {\mid \{f \in F \mid N(t,f)  \neq 0 \}\mid}}
 \end{equation}
 
-\[
-N(t, f) * log ( m / feature_freq ( t, F ) )
-\]
+
+$N(t, f) * log ( m / feature_{freq} ( t, F ) )$
 
 
 $P_L ( t ) = sum_f N( t, f)  /  sum_{ t' }$
