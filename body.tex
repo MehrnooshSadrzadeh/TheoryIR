@@ -10,8 +10,6 @@
 Depending on the co-occurrence quantification, and depending on the composition for s-v-o, for some expressions, one  gets equivalences between geometric and probabilistic (and information-theoretic) expressions.
 
 
-HELLO
-
 \cite{Wong/Yao:95}:
 \[
 \vec{d} \cdot \vec{q}
@@ -223,6 +221,81 @@ Here  ${1} \over {P(d)}$ is the IDF and  $P(d| t)$ is the TF.
 
 
 Other normalisation schemes such as conditional probability, LMI, BM25 etc ???
+
+
+
+\section{PMI and TF-IDF}
+
+The PMI is a favourable feature value for the vector-based representation
+of a term.
+The PMI is also the basis of TF-IDF, and we show-case the relationship
+in the equations to follow.
+
+Let $d$ be a document, $q$ a query, and $t$ a term.
+The logarithm of likelihood ratio of document and query is:
+\[
+\log\frac{P(d|q)}{P(d)} =
+	\sum_t n_L(t,d) \cdot \log\frac{P(t|q)}{P(t)}
+\]
+Here, $n_L(t,d)=\textmd{freq}(t,d)$ is the within-document term frequency
+quantification.
+
+The likelihood ratio is a measure of (in)dependence.
+The decomposition on the right side leads to the measure of independence
+between term and query.
+\[
+\frac{P(t|q)}{P(t)} = \frac{P(t,q)}{P(t) \cdot P(q)} = \frac{P(q|t)}{P(q)}
+\]
+For NLP, let $t_i$ and $_j$ be two target terms
+(for which we want to establish a similarity).
+$t_i$ is the ``document" and ``$t_j$" is the query.
+Then:
+\[
+\log\frac{P(t_i|t_j)}{P(t_i)} =
+	\sum_f \textmd{freq}(f,t_i) \cdot \log\frac{P(f|t_j)}{P(f)}
+\]
+The decomposition on the right side ...:
+\[
+\frac{P(f|t_j)}{P(f)} =
+\frac{P(\textmd{feature}|\textmd{target})}{P(\textmd{feature})} =
+\frac{P(\textmd{target}|\textmd{feature})}{P(\textmd{target})}
+\]
+
+The problem is that the term probability (the feature probability)
+is based on the ``total" occurrence, whereas the IDF is based
+on counting documents.
+In other words,
+the feature probability (for IR, term probability) is based on
+the occurrence of the event:
+$P(\textmd{feature term}):=P_L(\textmd{feature term})$
+is based on the Locations (the number of times the feature occurs), so is
+$P(t):=P_L(t)$.
+
+Transformation to the ``document" (the target term) via Poisson bridge.
+...
+
+For IR:
+\[
+P(t) = P(t|q) \cdot P_D(t)
+\]
+\[
+P(t|q) = \avgtf(t) / \avgdl
+\]
+Therefore:
+\[
+\log\frac{P(t|q)}{P(t)} = \log\frac{1}{P_D(t)}
+\]
+
+For NLP/PMI:
+\[
+P(f) = P(f|t) \cdot P_\textmd{TargetTerms}(f)
+\]
+\[
+\log\frac{P(f|t_j)}{P(f)} = \log\frac{1}{P_\textmd{TargetTerms}(f)}
+\]
+Expresses how discriminative the feature is.
+
+
 
 \section{Phrases}
 
