@@ -138,20 +138,20 @@ where we have
 \end{definition}
 
 
-Extending the probability notation to features as follows
+Dualizing the  probability notation to  features, we get:
 
 \begin{itemize}
-\item $D_F$: total number of features, i.e. $\mid F \mid$
-\item  $n_F$: number of features $k$- close to which term t occurs.
-\item  $N_L(f)$: number of locations $k$-close to feature $f$ (number of features times 2).
+\item $N_F$: total number of features in $F$, i.e. $\mid F \mid$
+\item  $n_F (t)$: number of features $k$- close to which term $t$ occurs
+\item  $n_L(f)$: number of locations $k$-close to feature $f$
 \end{itemize}
 
 we obtain a probabilistic version of TF-IFF as follows
 
 \[
-freq(t,f) \cdot \log{\frac{1}{P(t)}}
+freq(t,f) \cdot \log{\frac{1}{P(f)}}
 \]
-where  $P(t)$ is now  either of the following 
+where  $P(f)$ is now  either of the following 
 \[
 \frac{n_F(t)}{N_F}, \quad 
 \frac{n_L(f)}{N_F}, \cdots
