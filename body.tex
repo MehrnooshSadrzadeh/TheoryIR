@@ -75,30 +75,59 @@ P(t_1) \\
 
 
 
-\section{Single Terms: TF-IDF vs TF-IFF}
+\section{Single Terms}
 
-In IR, the main measure of retrieval is TF-IDF. One is given a  term $t$,  a document $d$, and a set of documents $D = \{d_1, d_2, \cdots, d_n\}$. Then one computes  the frequency  of   $t$  in $d$, multiplied by  the logarithm of the  total number of documents $n$ divided by the number of documents with  term $t$ in them, hence the following formula:
+
+\subsection{InvFreatureTemFreq or InvTargetTermFreq}
+
+
+
+
+ 
+
+In IR, the main measure of retrieval is TF-IDF. One is given a  term $t$,  a document $d$, and a set of documents $D = \{d_1, d_2, \cdots, d_N\}$. Then one computes  the frequency  of   $t$  in $d$, multiplied by  the logarithm of the  total number of documents $n$ divided by the number of documents with  term $t$ in them. The most traditional way of writing this formula is as  follows:
 
 \begin{equation}
 \label{tf-idf}
-TF(t,d) \cdot IDF(t, D) = freq(t, d) \cdot \log{{n} \over {\mid \{d \in D \mid t \in d\}\mid}}
+TF(t,d) \cdot IDF(t, D) = freq(t, d) \cdot \log{{N} \over {\mid \{d \in D \mid t \in d\}\mid}}
 \end{equation}
 
-In DS, given is a corpus of text in which one works with the frequency of co-occurrence of a term with  features, in a window of length $k$.  Suppose we have a set of  $m$ features  $F = \{f_1, f_2, \cdots, f_m\}$.  To obtain an IR-like measure in DS, we  have two change our view in two ways: 
+The above formula can be looked at in a probabilities way. One has to have an appropriate event space.  Using notation from   \cite{ThomasBook} this is possible;  first assume:
+\begin{itemize}
+\item $N_D$: total number of documents in $D$, i.e.   $\mid D \mid$
+\item $n_D(t)$: number of documents in which $t$ occurs.
+\item $n_L(t)$: number of locations in which  term $t$ occurs.
+\item $N_T$: total number of terms.
+\item $N_L$: total number of locations.
+\end{itemize}
+
+The  TF-IDF formula becomes equivalent to the following 
+\[
+ freq(t, d) \cdot \log{\frac{1}{P(t)}}
+\]
+where  $P(t)$ can be either of the following 
+\[
+\frac{n_D(t)}{N_D}, \quad 
+\frac{n_L(t)}{N_L}, \cdots
+\]
+
+
+
+In DS, given is a corpus of text in which one works with the frequency of co-occurrence of a term with  features, in a window of length $k$.  Suppose we have a set of  $m$ features  $F = \{f_1, f_2, \cdots, f_M\}$.  To obtain an IR-like measure in DS, the first intuition is do the following:
 
 \begin{enumerate}
 \item   Replace the notion of a  \emph{document}  with the notion of  \emph{feature}, 
 \item  Replace the notion of `a term being in a document'  with the notion of `a term occurring $k$ words close to a feature'.  In other words,  the  simple co-occurrence concept `within document' is replaced with the window-based co-occurrence concept of  `$k$-closed to feature'. 
 \end{enumerate}
 
-Doing these replacements in the TF-IDF formula of equation  \label {tf-idf} provides us with an analogous notion:   TF-IFF, defined as follows:
+This provide  us with a Term Frequency- Inverse Feature Frequency  (TF-IFF) formula,   as follows:
 
 \begin{definition}
 A feature-based TF-IFF  measure, where IFF stands for `Inverse Feature Frequency', is defined as follows:
 
 \begin{equation}
 \label{tf-iff}
-TF(t,f) \cdot IFF(t, F) = freq(t, f) \cdot \log{{m} \over {\mid \{f \in F \mid t  \ k\textmd{close-to} \ f \} \mid}}
+TF(t,f) \cdot IFF(t, F) = freq(t, f) \cdot \log{{M} \over {\mid \{f \in F \mid t  \ k\textmd{close-to} \ f \} \mid}}
 \end{equation}
 where we have
 \begin{itemize}
@@ -108,19 +137,34 @@ where we have
 
 \end{definition}
 
-To go from the TF-IFF to probabilities, one has to have event spaces.  In  \cite{ThomasBook} appropriate notation and methodology is introduced to make this passage for TF-IDF. Here we just use those and change `document' to `feature' where appropriate.  These are as follows:
+
+Extending the probability notation to features as follows
 
 \begin{itemize}
-\item $n_F(t,c)$: number of features,  from corpus c,  $k$- close to which term t occurs.
-\item $n_L(t,c)$: number of times term $t$ occurs in corpus $c$.
-\item $N_L(f)$: number of locations $k$-close to feature $f$ (number of features times 2).
+\item $D_F$: total number of features, i.e. $\mid F \mid$
+\item  $n_F$: number of features $k$- close to which term t occurs.
+\item  $N_L(f)$: number of locations $k$-close to feature $f$ (number of features times 2).
 \end{itemize}
 
-Using  these, we define probabilities:
+we obtain a probabilistic version of TF-IFF as follows
 
-\begin{itemize}
-\item $P_L(t \mid f) := \frac{n_L(t,f)}{N_L(f)}$: location-based $k$-close to feature term probability
-\end{itemize}
+\[
+freq(t,f) \cdot \log{\frac{1}{P(t)}}
+\]
+where  $P(t)$ is now  either of the following 
+\[
+\frac{n_F(t)}{N_F}, \quad 
+\frac{n_L(f)}{N_F}, \cdots
+\]
+
+EXPLAIN THE PROLEM 
+
+
+GET TO TF-ITF
+
+\begin{definition}
+TF-ITF: doing the counts for target word rather than the feature word. 
+\end{definition}
 
 ********OLD PART ****
 
@@ -221,6 +265,12 @@ Here  ${1} \over {P(d)}$ is the IDF and  $P(d| t)$ is the TF.
 
 
 Other normalisation schemes such as conditional probability, LMI, BM25 etc ???
+
+\subsection{TermFreq-InvDocFrec versus FeatureTermFreq-InvTargetTermFreq}
+
+Well, you see that I think it is InvTargetTermFreq, not InvFeatureTermFreq
+the latter is dual to the InvTermFreq(doc)
+used in IR as well, in the context of machine translation
 
 
 
