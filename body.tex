@@ -116,7 +116,7 @@ where $P(t)$  is the probability of picking a document with the term $t$ in it, 
 \[
 P(t) = \frac{n_D(t)}{N_D} 
 \]
-This probability be generalised using locations:  
+This probability is generalised using locations:  
 \[
 P(t) = \frac{n_L(t)}{N_L}
 \] 
@@ -177,6 +177,7 @@ To solve the problem,  extend probability notation to
 Define Term Frequency-Inverse Target Term Frequency (TF-ITTF) as follows:
 
 \begin{definition}
+\label{TF-ITTF}
 \TF-\textmd{ITTF}
 \begin{equation}
 \label{tf-ittf}
@@ -194,11 +195,29 @@ used in IR as well, in the context of machine translation
 
 \subsection{TermFreq-InvDocFrec versus FeatureTermFreq-InvTargetTermFreq}
 
-TF can also be dualized from documents to features, in which case we obtain: 
+TF can also be dualized from documents to features. In IR, it is `within document term frequency', for which we can also use a location notation as follow
 \[
-freq(t,f)
+\textmd{freq}(t,d) = n_L(t,d)
 \]
-This is the number of times term $t$ occurred $k$-close to feature $f$. 
+Dualizing this to features, we obtain `$k$-close to feature, target  term frequency', as follows:
+\begin{equation}
+\label{t-f}
+\textmd{freq}(t,f) = n_L(t,f)
+\end{equation}
+This is the number of times term $t$ occurrs $k$-close to feature $f$.  Using reasoning from previous subsection, we know that one can also have a notion of `$k$-close to target term, feature frequency', as follows:
+\begin{equation}
+\label{f-t}
+\textmd{freq}(f,t) = n_L(f,t)
+\end{equation}
+This is the number of times a feature $f$ occurs $k$-close to a target term $t$.  Evidently, equations \ref{t-f} and \ref{f-t} amount to the same thing. The number of times a target term occurred $k$-close to a feature is the same as the number of times a feature occurs $k$-close to a target term. 
+\[
+\textmd{freq}(t,f) = \textmd{freq}(f,t) 
+\]
+Thus the equation \ref{tf-ittf} of definition \ref{TF-ITTF} becomes equal to the following: 
+\[
+\textmd{FF}(t,f) \cdot \textmd{ITTF}(t, TT) =  freq(f, t) \cdot \log{\frac{1}{P(f)}}
+\]
+which leads us to  the notion of  {\bf Feature Term Frequency-Inv Target Term Frequency} (FF.ITTF).
 
 \subsection{PMI and TF-IDF}
 
