@@ -304,13 +304,39 @@ FORM INNER PRODUCT OF TWO TARGET TERMS
 Title: Phrase-based
 
 
-In CDS
+CDS rests on the idea to aggregate the vectors of the components of a phrase,
+and then compute the similarity between phrases via the inner product
+of the compositional vectors.
+For example, the similarity between two phrases is measured by
+the inner product of the sum of vectors of the participating terms:
+For two phrases ``abc" and ``xyz", the similarity score is:
+\[
+\textmd{sim}(abc,xyz)=
+	\left(\vec{a} + \vec{b} + \vec{c}\right) \times
+	\left(\vec{x} + \vec{y} + \vec{z}\right)
+\]
+Variations include
+1.~the vector space (space of feature terms),
+2.~he type of the vector components
+(e.g.~simple co-occurrence count, probabilities, PMI),
+3.~the aggregation (point-wise sum or product), and
+4.~the inner product (product of non-normalised or normalised vectors).
 
+Phrase-based IR rests on the idea to compute a score per phrase, and
+then aggregate the phrase scores into an overall score for a document-query
+pair.
+To illustrate, consider the conceptual equation:
+\[
+\textmd{score}(d,q) =
+	\sum_{\textmd{phrase} \in q}
+	\textmd{score}(\textmd{phrase},d) \cdot w(\textmd{phrase})
+\]
+In the following subsection, we detail the two approaches, before we
+show the duality between them.
 
-In IR
+\subsection{CDS}
 
-
-\subsection{XF-IDF: Scoring Subject-Verb-Object Phrases}
+\subsection{IR XF-IDF: Scoring Subject-Verb-Object Phrases}
 
 The main idea of XF-IDF \cite{Azzam/etal:SIGMOD:KEYS:2010} is to extend
 TF-IDF towards a ranking model that supports phrases.
@@ -345,6 +371,8 @@ To illustrate, consider the XF-IDF weight of the phrase ``woman likes sport".
 \end{eqnarray}
 
 
+
+\subsection{Duality between CDS and phrase-based IR}
 
 
 
