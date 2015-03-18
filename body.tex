@@ -1,13 +1,13 @@
 \section{Introduction \& Motivations}
 
 
-The term TF0IDF is often used in DS as a weighting scheme when it comes to normalizing  the number of times a target term occurred close to (e.g. in a window of $k$-words) a feature. The notion of TF-IDF comes from and is a well-known notion, however, this known notion is not what is used as TF-IDF in DS. Here ,  most known and worked-with of  is point wise mutual information or  PMI, defined as follows:
+The term TF-IDF is often used in DS as a weighting scheme when it comes to normalizing  the number of times a target term occurred close to (e.g. in a window of $k$-words) a feature. The notion of TF-IDF comes from and is a well-known notion, however, this known notion is not what is used as TF-IDF in DS. Here ,  most known and worked-with of  is point wise mutual information or  PMI, defined as follows:
 \[
  PMI (f, t) =  \log{{P(f \mid t)} \over{P(f)}}
  \]
 
 
-In this paper first we solve the mystery of why  the above (and its brother and sisters: LMI, Likelihood Ration, and PPMI) may be called TF-IDF or be a TF-IDF-based measure. We discover new relationships between IR's TF-IDF and DS's PMI. It turns out that the IR notion of `relevance'  is also closely related to the DS notion of `cosine similarity'. 
+In this paper first we solve the mystery of why  the above (and its brothesr and sisters: LMI, Likelihood Ration, and PPMI) may be called TF-IDF or be a TF-IDF-based measure. We discover new relationships between IR's TF-IDF and DS's PMI. It turns out that the IR notion of `relevance'  is also closely related to the DS notion of `cosine similarity'. 
 
 Then, from single terms we move to phrases and show how DS notion of  compositionality relates to a similar notion in  IR's, used in semantic IR and applied to propositions. 
 
@@ -112,27 +112,18 @@ The  TF-IDF formula becomes equivalent to the following
 \[
  freq(t, d) \cdot \log{\frac{1}{P(t)}}
 \]
-
-
-*******************************\\
-HOW DO WE READ $P(t)$?
-********************************
-
-
-WHY LOCATIONS???
-\[
-P(t) = \frac{n_L(t)}{N_L}
-\] 
-
-****This is the probability of picking a document with the term $t$ in it. *****
-
-instantiating `document' for `location, we obtain a familiar notion: 
+where $P(t)$  is the probability of picking a document with the term $t$ in it, that is 
 \[
 P(t) = \frac{n_D(t)}{N_D} 
 \]
+This probability be generalised using locations:  
+\[
+P(t) = \frac{n_L(t)}{N_L}
+\] 
+where previously  `document' was instantiated for `location'. 
 
 
-
+\medskip
 In DS, given is a corpus of text in which one works with the frequency of co-occurrence of a term with  features, in a window of length $k$.  Suppose we have a set of  $m$ features  $F = \{f_1, f_2, \cdots, f_M\}$.  To obtain an IR-like measure in DS, the first intuition is do the following:
 
 \begin{enumerate}
@@ -171,7 +162,7 @@ we obtain a probabilistic version of TF-IFF as follows
 \[
 freq(t,f) \cdot \log{\frac{1}{P(t)}}
 \]
-where  
+where   $P(t)$ is the probability of picking a feature with $t$ occurring $k$-close to it, that is
 \[
 P(t) = \frac{n_F(t)}{N_F}
 \]
@@ -196,15 +187,18 @@ where
 P(f) =  \frac{n_{TT}(f)}{N_{TT}}
 \]
 \end{definition}
+Here, $P(f)$ is the  probability of picking a target term  occurring $k$-close to feature $f$.  This is dual to the InvTermFreq(doc)
+used in IR as well, in the context of machine translation
+
 
 
 \subsection{TermFreq-InvDocFrec versus FeatureTermFreq-InvTargetTermFreq}
 
-Well, you see that I think it is InvTargetTermFreq, not InvFeatureTermFreq
-the latter is dual to the InvTermFreq(doc)
-used in IR as well, in the context of machine translation
-
-
+TF can also be dualized from documents to features, in which case we obtain: 
+\[
+freq(t,f)
+\]
+This is the number of times term $t$ occurred $k$-close to feature $f$. 
 
 \subsection{PMI and TF-IDF}
 
@@ -228,7 +222,7 @@ between term and query.
 \[
 \frac{P(t|q)}{P(t)} = \frac{P(t,q)}{P(t) \cdot P(q)} = \frac{P(q|t)}{P(q)}
 \]
-For NLP, let $t_i$ and $_j$ be two target terms
+For NLP, let $t_i$ and $t_j$ be two target terms
 (for which we want to establish a similarity).
 $t_i$ is the ``document" and ``$t_j$" is the query.
 Then:
