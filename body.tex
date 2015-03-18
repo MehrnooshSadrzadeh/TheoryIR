@@ -166,18 +166,22 @@ where   $P(t)$ is the probability of picking a feature with $t$ occurring $k$-cl
 \[
 P(t) = \frac{n_F(t)}{N_F}
 \]
-looking at it location wise, we still have the same formula as for TF-IDF, that is $\frac{n_L(t)}{N_L}$, but here a `location'  is a `feature'.  Then it seems that this does not depend on the feature and is constant. 
+looking at it location wise, we still have the same formula as for TF-IDF, that is $\frac{n_L(t)}{N_L}$, but here a `location'  is a `feature'.  
 
-To solve the problem,  extend probability notation to
+
+\medskip
+Whereas in IR, document and term are two different entities (one is a set of and thus contains the other), in  DS, targets  and features are both words, so they can be swapped with each other and one  can  develop a similar measure by swapping the target and feature terms. 
+
 \begin{itemize}
 \item $N_{TT}$: total number of target terms
-\item  $n_{TT}(f)$: number of target terms which are $k$-close to feature $f$.
+\item  $n_{TT}(f)$: number of target terms  $k$-close to feature $f$.
 \end{itemize}
 
 Define Term Frequency-Inverse Target Term Frequency (TF-ITTF) as follows:
 
 \begin{definition}
 \label{TF-ITTF}
+A target-term-based  \emph{TF-ITTF}  measure, where \emph{ITTF} stands for `\emph{Inverse Target Term Frequency}', is defined as follows:
 \TF-\textmd{ITTF}
 \begin{equation}
 \label{tf-ittf}
