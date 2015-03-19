@@ -197,41 +197,42 @@ In an ideal DS scenario, all the words from the vocabulary of a language can be 
 \label{ttf=ftf}
 \textmd{freq}(t,f) = \textmd{freq}(f,t) 
 \end{equation}
-So we have {\bf TargetTermFrequency}  = {\bf FeatureTermFrequency} ({\bf TTF} = {\bf FTF}).  However, in practical scenarios, both of these are separate subsets of the vocabulary, with feature words being specific lemmas, topics, grammatical relations, etc. 
+However, in practical scenarios, both of these are separate subsets of the vocabulary, with feature words being specific lemmas, topics, grammatical relations, etc. 
 
 \subsection{Dualizing TF-IDF}
 \label{subsec-TF-IDF}
 
-Putting  the equation developed in subsections \ref{subsec-IDF} and \ref{subsec-TF} together,  we obtain four dual notions  for TF-IDF in DS, which  in ideal scenarios where  $\textmd{freq}(t,f) = \textmd{freq}(f,t)$, reduce to just two notions.  To be systematic we list all four options first. These are:
+Putting  the equation developed in subsections \ref{subsec-IDF} and \ref{subsec-TF} together,  we obtain four dual notions  for TF-IDF in DS. If one takes the  ideal scenario to be true, then  $\textmd{freq}(t,f) = \textmd{freq}(f,t)$ and these four reduce to  two.  To be systematic we list all four options below: 
 
-\begin{definition}
-{\bf Feature Term Frequency-Inv Feature Term Frequency} (FTF.IFTF) 
+\begin{enumerate}
+\item {\bf Feature Term Frequency-Inv Feature Term Frequency} (FTF.IFTF) 
 \begin{equation}
 \label{ftf-iftf}
 \textmd{FTF}(t,f) \cdot \textmd{IFTF}(t, F) =  \textmd{freq}(f, t) \cdot \log{\frac{1}{P_{\textmd{FeatureTerm}}(t)}}
 \end{equation}
-in ideal scenarios equal  to  {\bf Target Term Frequency-Inv Feature Term Frequency} (TTF.IFTF)
+\item  {\bf Target Term Frequency-Inv Feature Term Frequency} (TTF.IFTF)
 \begin{equation}
 \label{ttf-iftf}
 \textmd{TTF}(t,f) \cdot \textmd{IFTF}(t, F) =  \textmd{freq}(t,f) \cdot \log{\frac{1}{P_{\textmd{FeatureTerm}}(t)}}
 \end{equation}
-\end{definition}
-
-
-
-\begin{definition}
-{\bf Feature Term Frequency-Inv Target Term Frequency} (FTF.ITTF)
+\item {\bf Feature Term Frequency-Inv Target Term Frequency} (FTF.ITTF)
 \begin{equation}
 \label{ftf-ittf}
 \textmd{FTF}(t,f) \cdot \textmd{ITTF}(t, TT) =  \textmd{freq}(f, t) \cdot \log{\frac{1}{P_{\textmd{TargetTerm}}(f)}}
 \end{equation}
-in ideal scenarios equal to {\bf Target Term Frequency-Inv Target Term Frequency} (TTF.ITTF)
+\item  {\bf Target Term Frequency-Inv Target Term Frequency} (TTF.ITTF)
 \begin{equation}
 \label{ttf-ittf}
 \textmd{TTF}(t,f) \cdot \textmd{ITTF}(t, TT) =  \textmd{freq}(t, f) \cdot \log{\frac{1}{P_{\textmd{TargetTerm}}(f)}}
 \end{equation}
-\end{definition}
-The question is  which one of these two is the one used in DS? Some DS measures and their IR duals are shown in table \ref{tb-ds-ir}, obtained by following the latter approach (TTF.ITTF) and  replacing  `document' with `target term'  ($d$ with $t$) and  `term' with `feature term'  ($t$ with $f$).
+\end{enumerate}
+
+In the ideal case we have TTF = FTF, and hence 
+\begin{quote}
+FTF.IFTF = TTF.IFTF \qquad FTF.ITTF = TTF.ITTF. 
+\end{quote}
+
+The question is  which one of these two (or four)  is the one used in DS? Some DS measures (from \cite{BullineriaLevy} CITE and CHECK Turney-Pantel) and their IR duals are shown in table \ref{tb-ds-ir}, obtained by following the latter approach (TTF.ITTF) and  replacing  `document' with `target term'  ($d$ with $t$) and  `term' with `feature term'  ($t$ with $f$).
   
  
 \begin{figure*}[htb]
