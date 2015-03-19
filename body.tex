@@ -5,7 +5,7 @@ The term TF-IDF is often used in DS as a weighting scheme when it comes to norma
 \[
  PMI (f, t) =  \log{{P(f \mid t)} \over{P(f)}}
  \]
-
+ADD REFERENCE TO MIRELLA'S PAPER AND MAY BE OTHER THINGS
 
 In this paper first we solve the mystery of why  the above (and its brothesr and sisters: LMI, Likelihood Ration, and PPMI) may be called TF-IDF or be a TF-IDF-based measure. We discover new relationships between IR's TF-IDF and DS's PMI. It turns out that the IR notion of `relevance'  is also closely related to the DS notion of `cosine similarity'. 
 
@@ -112,7 +112,7 @@ P_{\textmd{Location}} = \frac{n_{\textmd{Location}}(x,y)}{N_{\textmd{Location}}}
 
 
 \medskip
-In DS, given is a corpus of text in which one works with the frequency of co-occurrence of a \emph{target term} with \emph{features}, in a window of length $k$.  Suppose we have a set of  $m$ features  $F = \{f_1, f_2, \cdots, f_M\}$.  To obtain an IR-like measure in DS, the first intuition that comes to mind is do the following:
+In DS, given is a corpus of text in which one works with the frequency of co-occurrence of a \emph{target term} with \emph{features}, in a window of length $k$.  Suppose we have a set of  $M$ features  $F = \{f_1, f_2, \cdots, f_M\}$.  To obtain an IR-like measure in DS, the first intuition that comes to mind is do the following:
 
 \begin{enumerate}
 \item   Replace the notion of a  \emph{document}  with the notion of  \emph{feature}, 
@@ -151,9 +151,9 @@ y := t
 \]
 And obtain a    $P_{\textmd{FeatureTerm}}(t)$ (probability of picking a feature with target term $t$ occurring $k$-close to it) as follows
 \[
-P_{\textmd{FeatureTerm}}(t) = \frac{n_{\textmd{FeatureTerm}}(t,F)}{N_F} 
+P_{\textmd{FeatureTerm}}(t) = \frac{n_{\textmd{FeatureTerm}}(t,f)}{N_F} 
 \]
-where $n_{\textmd{FeatureTerm}}(t,F)$ is the number of times target term $t$ occurred $k$-close to feature $f$ and $N_F$ is the total number of features. Hence the probabilistic version of IFTF becomes as follows:
+where $n_{\textmd{FeatureTerm}}(t,f)$ is the number of times target term $t$ occurred $k$-close to feature $f$ and $N_F$ is the total number of features. Hence the probabilistic version of IFTF becomes as follows:
 \[
 \textmd{IFTF}(t, F) =  \log{\frac{1}{P_{\textmd{FeatureTerm}}(t)}}
 \]
@@ -161,15 +161,15 @@ where $n_{\textmd{FeatureTerm}}(t,F)$ is the number of times target term $t$ occ
 \medskip
 The above computations provide us with a vector representation for documents in IR and for features in DS. However, in DS, one is interested in having vectors for target terms. These are known in DS as target words and  are words in whose meanings and the similarity of meanings therein we are interested.  This  option is the DS dual of IR's  InvTermFreq(doc) used in the context of machine translation, for which one can define a $P_{\textmd{TargetTerm}}(f) $ as the  probability of picking a target term  occurring $k$-close to feature $f$: 
 \[
-P_{\textmd{TargetTerm}}(f) = \frac{n_{\textmd{TargetTerm}}(f)}{N_{N_{\textmd{TargetTerm}}}}
+P_{\textmd{TargetTerm}}(f) = \frac{n_{\textmd{TargetTerm}}(f, t)}{N_{N_{\textmd{TargetTerm}}}}
 \]
-where  $N_{\textmd{TargetTerm}}$ is the total number of target terms and   $n_{\textmd{TargetTerm}}(f)$is the number of target terms  $k$-close to feature $f$ and TT is the total number of target terms. We thus obtain the notion of  {\bf Term Frequency-Inverse Target Term Frequency} (ITTF) as follows:
+where  $N_{\textmd{TargetTerm}}$ is the total number of target terms,    $n_{\textmd{TargetTerm}}(f, t)$is the number of  times feature term $f$ occurred   $k$-close to target term  $t$,  and TT is the total number of target terms. We thus obtain the notion of  {\bf Term Frequency-Inverse Target Term Frequency} (ITTF) as follows:
 
 \begin{equation}
 \label{ittf}
  \textmd{ITTF}(t, TT) =  \log{\frac{1}{P_{\textmd{TargetTerm}}(f)}}
 \end{equation}
-
+From an IR perspective, this notion may be  the  lesser intuitive of the two, since a direct comparison of it  with the TF-IDF formula amounts to the fact that  we replace the notion of `document' with `target terms' and the notion of `term' with `feature terms'.
 
 \subsection{Dualizing TF to Feature Term and Target Term Frequency}
 \label{subsec-TF}
@@ -190,28 +190,30 @@ This is the number of times target  term $t$ occurrs $k$-close to feature $f$.  
 \label{f-t}
 \textmd{freq}(f,t) = n_{\textmd{TartgetTerm}}(f,t)
 \end{equation}
-This is the number of times a feature $f$ occurs $k$-close to a target term $t$.  Evidently, equations \ref{t-f} and \ref{f-t} amount to the same thing. The number of times a target term occurred $k$-close to a feature is the same as the number of times a feature occurs $k$-close to a target term, that is
+This is the number of times a feature $f$ occurs $k$-close to a target term $t$.  This is not what one expects the DS method to be counting. Normally, DS methods count how many times a target term occurs close to a feature, i.e. the TTF. 
+
+In an ideal DS scenario, all the words from the vocabulary of a language can be both features and targets. In this case, evidently, equations \ref{t-f} and \ref{f-t} amount to the same thing. The number of times a target term occurred $k$-close to a feature is the same as the number of times a feature occurs $k$-close to a target term, that is
 \begin{equation}
 \label{ttf=ftf}
 \textmd{freq}(t,f) = \textmd{freq}(f,t) 
 \end{equation}
-So we have {\bf TargetTermFrequency}  = {\bf FeatureTermFrequency} ({\bf TTF} = {\bf FTF}). 
+So we have {\bf TargetTermFrequency}  = {\bf FeatureTermFrequency} ({\bf TTF} = {\bf FTF}).  However, in practical scenarios, both of these are separate subsets of the vocabulary, with feature words being specific lemmas, topics, grammatical relations, etc. 
 
 \subsection{Dualizing TF-IDF}
 \label{subsec-TF-IDF}
 
-Putting  the equation developed in subsections \ref{subsec-IDF} and \ref{subsec-TF} together,  we obtain four dual notions  for TF-IDF in DS, which  since $\textmd{freq}(t,f) = \textmd{freq}(f,t)$, reduce to just two notions.  To be systematic we list all four options first. These are:
+Putting  the equation developed in subsections \ref{subsec-IDF} and \ref{subsec-TF} together,  we obtain four dual notions  for TF-IDF in DS, which  in ideal scenarios where  $\textmd{freq}(t,f) = \textmd{freq}(f,t)$, reduce to just two notions.  To be systematic we list all four options first. These are:
 
 \begin{definition}
 {\bf Feature Term Frequency-Inv Feature Term Frequency} (FTF.IFTF) 
 \begin{equation}
 \label{ftf-iftf}
-\textmd{FTF}(t,f) \cdot \textmd{IFTF}(t, F) =  \textmd{freq}(f, t) \cdot \log{\frac{1}{P(t)}}
+\textmd{FTF}(t,f) \cdot \textmd{IFTF}(t, F) =  \textmd{freq}(f, t) \cdot \log{\frac{1}{P_{\textmd{FeatureTerm}}(t)}}
 \end{equation}
-equal  to  {\bf Target Term Frequency-Inv Feature Term Frequency} (TTF.IFTF)
+in ideal scenarios equal  to  {\bf Target Term Frequency-Inv Feature Term Frequency} (TTF.IFTF)
 \begin{equation}
 \label{ttf-iftf}
-\textmd{TTF}(t,f) \cdot \textmd{IFTF}(t, F) =  \textmd{freq}(t,f) \cdot \log{\frac{1}{P(t)}}
+\textmd{TTF}(t,f) \cdot \textmd{IFTF}(t, F) =  \textmd{freq}(t,f) \cdot \log{\frac{1}{P_{\textmd{FeatureTerm}}(t)}}
 \end{equation}
 \end{definition}
 
@@ -221,18 +223,40 @@ equal  to  {\bf Target Term Frequency-Inv Feature Term Frequency} (TTF.IFTF)
 {\bf Feature Term Frequency-Inv Target Term Frequency} (FTF.ITTF)
 \begin{equation}
 \label{ftf-ittf}
-\textmd{FTF}(t,f) \cdot \textmd{ITTF}(t, TT) =  \textmd{freq}(f, t) \cdot \log{\frac{1}{P(f)}}
+\textmd{FTF}(t,f) \cdot \textmd{ITTF}(t, TT) =  \textmd{freq}(f, t) \cdot \log{\frac{1}{P_{\textmd{TargetTerm}}(f)}}
 \end{equation}
-equal to {\bf Target Term Frequency-Inv Target Term Frequency} (TTF.ITTF)
+in ideal scenarios equal to {\bf Target Term Frequency-Inv Target Term Frequency} (TTF.ITTF)
 \begin{equation}
 \label{ttf-ittf}
-\textmd{TTF}(t,f) \cdot \textmd{ITTF}(t, TT) =  \textmd{freq}(t, f) \cdot \log{\frac{1}{P(f)}}
+\textmd{TTF}(t,f) \cdot \textmd{ITTF}(t, TT) =  \textmd{freq}(t, f) \cdot \log{\frac{1}{P_{\textmd{TargetTerm}}(f)}}
 \end{equation}
 \end{definition}
-So we have  {\bf FTF-IFTF}  = {\bf TTF-IFTF}  and  {\bf FTF-ITTF}  = {\bf TTF-ITTF}. The question is 
- which one of these two is the one used in DS? In the next section we show that {\bf TTF-ITTF} can be used to get DS's {\bf PMI}. 
+The question is  which one of these two is the one used in DS? Some DS measures and their IR duals are shown in table \ref{tb-ds-ir}, obtained by following the latter approach (TTF.ITTF) and  replacing  `document' with `target term'  ($d$ with $t$) and  `term' with `feature term'  ($t$ with $f$).
+  
+ 
+\begin{figure*}[htb]
+  \centering
+  \begin{tabular}{|l|c|c|l|}
+  \hline
+  DS Measure  && IR Dual &\\
+  \hline
+ Raw Counts  &$n_{\textmd{TargetTerm}}(f,t)$ & TF &$n_{\textmd{Doc}}(t,d)$\\
+ &&&\\
+ Conditional Probability &$ \frac{P(f,t)}{P(t)}$ & unknown &$\frac{P(t,d)}{P(d)}$\\
+ &&&\\
+ Ratio Likelihood & $\frac{P(f \mid t)}{P(f)P(t)}$ & unknown & $\frac{P(t \mid d)}{P(t)P(d)}$\\
+ &&&\\
+ PMI & $\log{\frac{P(f \mid t)}{P(f)P(t)}}$  & see  subsection \ref{PMI-TF-IDF}&$\log{\frac{P(t \mid d)}{P(t)P(d)}}$\\
+ \hline
+  \end{tabular}
+  \caption{Average score (Pearson) correlation per query.}
+  \label{tb-ds-ir}
+\end{figure*}
+
+  In the next section we show that how the lesser intuitive notion of  {\bf TTF-ITTF} can be used to get DS's {\bf PMI}. 
 
 \subsection{PMI and TF-IDF}
+\label{PMI-TF-IDF}
 
 The PMI is a favourable feature value for the vector-based representation
 of a term.
@@ -344,17 +368,10 @@ w_\textmd{XF-IDF}((s,v,o)) :=
 To illustrate, consider the XF-IDF weight of the phrase ``woman likes sport".
 
 ...
-
-\begin{eqnarray}
-\label{tf-idf-phrase}
-\RSV_\textmd{TF-IDF}(d,q) &:=& \sum_{t \in q} \textmd{score}(t,d,q)\\
-\textmd{score}(t,d,q) &:=&
-\TF(t,d) \cdot \IDF(t)
-\end{eqnarray}
+DO EXAMPLE
 
 
-
-
+WHAT IS P(type)?
 
 \section{Why the independence measure is best}
 
