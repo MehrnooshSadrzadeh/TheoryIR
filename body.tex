@@ -112,7 +112,7 @@ P(x) = \frac{n_{\textmd{Location}}(x,y)}{N_{\textmd{Location}}}
 
 
 \medskip
-In DS, given is a corpus of text in which one works with the frequency of co-occurrence of a \emph{target term} with \emph{features}, in a window of length $k$.  Suppose we have a set of  $m$ features  $F = \{f_1, f_2, \cdots, f_M\}$.  To obtain an IR-like measure in DS, the first intuition is do the following:
+In DS, given is a corpus of text in which one works with the frequency of co-occurrence of a \emph{target term} with \emph{features}, in a window of length $k$.  Suppose we have a set of  $m$ features  $F = \{f_1, f_2, \cdots, f_M\}$.  To obtain an IR-like measure in DS, the first intuition that comes to mind is do the following:
 
 \begin{enumerate}
 \item   Replace the notion of a  \emph{document}  with the notion of  \emph{feature}, 
@@ -163,7 +163,7 @@ The above computations provide us with a vector representation for documents in 
 \[
 P(f) = \frac{n_{\textmd{TargetTerm}}(f)}{N_{N_{\textmd{TargetTerm}}}}
 \]
-where  $N_{\textmd{TargetTerm}}$ is the total number of target terms and   $n_{\textmd{TargetTerm}}(f)$is the number of target terms  $k$-close to feature $f$. We thus obtain the notion of  {\bf Term Frequency-Inverse Target Term Frequency} (ITTF) as follows:
+where  $N_{\textmd{TargetTerm}}$ is the total number of target terms and   $n_{\textmd{TargetTerm}}(f)$is the number of target terms  $k$-close to feature $f$ and TT is the total number of target terms. We thus obtain the notion of  {\bf Term Frequency-Inverse Target Term Frequency} (ITTF) as follows:
 
 \begin{equation}
 \label{ittf}
