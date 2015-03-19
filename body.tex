@@ -275,23 +275,23 @@ on counting documents.
 In other words,
 the feature probability (for IR, term probability) is based on
 the occurrence of the event:
-$P(\textmd{feature term}):=P_L(\textmd{feature term})$
+$P(\textmd{feature term}):=P_{\textmd{Location}}(\textmd{feature term})$
 is based on the Locations (the number of times the feature occurs), so is
-$P(t):=P_L(t)$.
+$P(t):=P_{\textmd{Location}}(t)$.
 
 Transformation to the ``document" (the target term) via Poisson bridge.
 ...
 
 For IR:
 \[
-P(t) = P(t|q) \cdot P_D(t)
+P(t) = P(t|q) \cdot P_{\textmd{Doc}}(t)
 \]
 \[
 P(t|q) = \avgtf(t) / \avgdl
 \]
 Therefore:
 \[
-\log\frac{P(t|q)}{P(t)} = \log\frac{1}{P_D(t)}
+\log\frac{P(t|q)}{P(t)} = \log\frac{1}{P_{\textmd{Doc}}(t)}
 \]
 
 For NLP/PMI:
