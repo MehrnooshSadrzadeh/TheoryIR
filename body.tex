@@ -188,7 +188,7 @@ P(f) = \frac{n_L(f)}{N_L}
 \subsection{Dualizing TF to Feature Term and Target Term Frequency}
 \label{subsec-TF}
 
-TF can also be dualized from documents to features and to target terms to obtain the corresponding expressions in each computation formula. In IR, it is `within document term frequency', for which we can also use a location notation as follow
+TF can also be dualized from documents to features and to target terms to obtain the corresponding expressions in each computation formula.  We refer to these by Feature Term Frequency and Target Term  Frequency. The word `term'  is kept and the adjectives `feature' and `target' are added to it so we can distinguish them. In IR, it is `within document term frequency', for which we can also use a location notation as follow
 \[
 \textmd{freq}(t,d) = n_L(t,d)
 \]
@@ -251,12 +251,12 @@ Putting  the equation developed in subsections \ref{subsec-IDF} and \ref{subsec-
 
 It follows from equality \ref{ttf=ftf} that the above notions of \ref{ftf-iftf} and \ref{ttf-iftf} amount to the same number, and of \ref{ftf-ittf} and \ref{ttf-ittf} also amount to  the same number.  That is
 \begin{quote}
-{\bf FTF-IFTF}  = {\bf TTF-IFTF} \\
-{\bf FTF-ITTF}  = {\bf TTF-ITTF} 
+ \ref{ftf-iftf} =  \ref{ttf-iftf} \qquad \quad  {\bf FTF-IFTF}  = {\bf TTF-IFTF} \\
+\ref{ftf-ittf} =  \ref{ttf-ittf}  \qquad {\bf FTF-ITTF}  = {\bf TTF-ITTF} 
 \end{quote}
 
 
-But which one to use and which one has in fact been used in DS?
+But which one to use and which one has in fact been used in DS? In the next section we show that {\bf TTF-ITTF} can be used to get DS's {\bf PMI}. 
 
 \subsection{PMI and TF-IDF}
 
