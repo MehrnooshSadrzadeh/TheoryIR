@@ -100,9 +100,9 @@ To be able to relate this to PMI, we need to first turn the different expression
 \item $n_{\textmd{Location}} (x,y)$ number of locations in which variable $x$ `occurs with' variable $y$.
 \end{itemize}
 
-Then can define a probability $P(x)$ as follows
+Then can define a probability $P_{\textmd{Location}}(x)$ as follows
 \[
-P(x) = \frac{n_{\textmd{Location}}(x,y)}{N_{\textmd{Location}}}
+P_{\textmd{Location}} = \frac{n_{\textmd{Location}}(x,y)}{N_{\textmd{Location}}}
 \]
  this is  the probability of choosing a variable $y$ with term $x$ `occurring with it'.  Using this notation as guideline, we proceed as follows:   first turn the IDF part of the TF-IDF formula into probabilities and develop its DS dual concepts, then do the same for TF, and  put the two together.  This provides us with effectively two dual TF-IDF notions for DS.  But which ones are used in DS and which ones are good to use? In the last subsection of this section, we show how one can obtain PMI from ??? and argue why the other  one is terribly bad. 
 
@@ -132,13 +132,13 @@ In order to view things probabilistically, first recall the same process in IR w
 L := D\qquad
 x := t \qquad y := d
 \]
-Then one obtains  a $P(t)$,  as follows:
+Then one obtains  a $P_{\textmd{Doc}}(t)$,  as follows:
 \[
-P(t) = \frac{n_{\textmd{Doc}}(t,d)}{N_{\textmd{Doc}}} 
+P_{\textmd{Doc}}(t) = \frac{n_{\textmd{Doc}}(t,d)}{N_{\textmd{Doc}}} 
 \]
 and the IDF expression becomes equivalent to the following 
 \[
-\IDF (t, D) = \log{\frac{1}{P(t)}}
+\IDF (t, D) = \log{\frac{1}{P_{\textmd{Doc}}(t)}}
 \]
 
 
@@ -149,25 +149,25 @@ L := F \qquad
 x := f\qquad
 y := t
 \]
-And obtain a    $P(t)$ (probability of picking a feature with target term $t$ occurring $k$-close to it) as follows
+And obtain a    $P_{\textmd{FeatureTerm}}(t)$ (probability of picking a feature with target term $t$ occurring $k$-close to it) as follows
 \[
-P(t) = \frac{n_{\textmd{FeatureTerm}}(t,F)}{N_F} 
+P_{\textmd{FeatureTerm}}(t) = \frac{n_{\textmd{FeatureTerm}}(t,F)}{N_F} 
 \]
 where $n_{\textmd{FeatureTerm}}(t,F)$ is the number of times target term $t$ occurred $k$-close to feature $f$ and $N_F$ is the total number of features. Hence the probabilistic version of IFTF becomes as follows:
 \[
-\textmd{IFTF}(t, F) =  \log{\frac{1}{P(t)}}
+\textmd{IFTF}(t, F) =  \log{\frac{1}{P_{\textmd{FeatureTerm}}(t)}}
 \]
 
 \medskip
-The above computations provide us with a vector representation for documents in IR and for features in DS. However, in DS, one is interested in having vectors for target terms. These are known in DS as target words and  are words in whose meanings and the similarity of meanings therein we are interested.  This  option is the DS dual of IR's  InvTermFreq(doc) used in the context of machine translation, for which one can define a $P(f)$ as the  probability of picking a target term  occurring $k$-close to feature $f$: 
+The above computations provide us with a vector representation for documents in IR and for features in DS. However, in DS, one is interested in having vectors for target terms. These are known in DS as target words and  are words in whose meanings and the similarity of meanings therein we are interested.  This  option is the DS dual of IR's  InvTermFreq(doc) used in the context of machine translation, for which one can define a $P_{\textmd{TargetTerm}}(f) $ as the  probability of picking a target term  occurring $k$-close to feature $f$: 
 \[
-P(f) = \frac{n_{\textmd{TargetTerm}}(f)}{N_{N_{\textmd{TargetTerm}}}}
+P_{\textmd{TargetTerm}}(f) = \frac{n_{\textmd{TargetTerm}}(f)}{N_{N_{\textmd{TargetTerm}}}}
 \]
 where  $N_{\textmd{TargetTerm}}$ is the total number of target terms and   $n_{\textmd{TargetTerm}}(f)$is the number of target terms  $k$-close to feature $f$ and TT is the total number of target terms. We thus obtain the notion of  {\bf Term Frequency-Inverse Target Term Frequency} (ITTF) as follows:
 
 \begin{equation}
 \label{ittf}
- \textmd{ITTF}(t, TT) =  \log{\frac{1}{P(f)}}
+ \textmd{ITTF}(t, TT) =  \log{\frac{1}{P_{\textmd{TargetTerm}}(f)}}
 \end{equation}
 
 
