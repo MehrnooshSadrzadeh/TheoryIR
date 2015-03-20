@@ -97,14 +97,14 @@ To be able to relate this to PMI, we need to first turn the different expression
 \begin{itemize}
 \item $L = \{l_1, l_2, \cdots, l_L\}$ a set of locations
 \item $N_{\textmd{Location}}$ the total number of locations, i.e. size  of $L$.
-\item $n_{\textmd{Location}} (x,y)$ number of locations in which variable $x$ `occurs with' variable $y$.
+\item $n_{\textmd{Location}} (x,y)$ number of locations in which event $x$ `occurs with' event $y$.
 \end{itemize}
 
 Then can define a probability $P_{\textmd{Location}}(x)$ as follows
 \[
-P_{\textmd{Location}} = \frac{n_{\textmd{Location}}(x,y)}{N_{\textmd{Location}}}
+P_{\textmd{Location}}  (x \mid y) = \frac{n_{\textmd{Location}}(x,y)}{N_{\textmd{Location}}(y)}
 \]
- this is  the probability of choosing a variable $y$ with term $x$ `occurring with it'.  Using this notation as guideline, we proceed as follows:   first turn the IDF part of the TF-IDF formula into probabilities and develop its DS dual concepts, then do the same for TF, and  put the two together.  This provides us with effectively two dual TF-IDF notions for DS.  But which ones are used in DS and which ones are good to use? In the last subsection of this section, we show how one can obtain PMI from ??? and argue why the other  one is terribly bad. 
+ this is  the conditional probability of $x$ occurring/happening given $y$.  Using this notation as guideline, we proceed as follows:   first turn the IDF part of the TF-IDF formula into probabilities and develop its DS dual concepts, then do the same for TF, and  put the two together.  This provides us with effectively two dual TF-IDF notions for DS.  But which ones are used in DS and which ones are good to use? In the last subsection of this section, we show how one can obtain PMI from ??? and argue why the other  one is terribly bad. 
 
 
 \subsection{Dualizing  IDF to Inverse Feature  and Inverse Target Term Frequency }
@@ -132,13 +132,19 @@ In order to view things probabilistically, first recall the same process in IR w
 L := D\qquad
 x := t \qquad y := d
 \]
+\[
+P_{\textmd{Location}}(t \mid c) =  \frac{n_{\textmd{Location}}(t,c)}{N_{\textmd{Location}}(c)} 
+\]
+\[
+P_{\textmd{Location}}(t \mid d) =  \frac{n_{\textmd{Location}}(t,d)}{N_{\textmd{Location}}(d)} 
+\]
 Then one obtains  a $P_{\textmd{Doc}}(t)$,  as follows:
 \[
-P_{\textmd{Doc}}(t) = \frac{n_{\textmd{Doc}}(t,d)}{N_{\textmd{Doc}}} 
+P_{\textmd{Doc}}(t\mid c) = \frac{n_{\textmd{Doc}}(t,c)}{N_{\textmd{Doc}}(c)} 
 \]
 and the IDF expression becomes equivalent to the following 
 \[
-\IDF (t, D) = \log{\frac{1}{P_{\textmd{Doc}}(t)}}
+\IDF (t, D_c) = \log{\frac{1}{P_{\textmd{Doc}}(t \mid c)}}
 \]
 
 
@@ -151,11 +157,17 @@ y := t
 \]
 And obtain a    $P_{\textmd{FeatureTerm}}(t)$ (probability of picking a feature with target term $t$ occurring $k$-close to it) as follows
 \[
-P_{\textmd{FeatureTerm}}(t) = \frac{n_{\textmd{FeatureTerm}}(t,f)}{N_F} 
+P_{\textmd{Locations}}(t \mid f) = \frac{n_{\textmd{Locations}}(t,f)}{N_{\textmd{Locations}} (f)} 
+\]
+\[
+P_{\textmd{FeatureTerm}}(t \mid c) = \frac{n_{\textmd{FeatureTerm}}(t,c)}{N_{\textmd{FeatureTerm}} (c)} 
+\]
+\[
+P_{\textmd{TargetTerm}}(f \mid c) = \frac{n_{\textmd{TargetTerm}}(f,c)}{N_{\textmd{TargetTerm}} (c)} 
 \]
 where $n_{\textmd{FeatureTerm}}(t,f)$ is the number of times target term $t$ occurred $k$-close to feature $f$ and $N_F$ is the total number of features. Hence the probabilistic version of IFTF becomes as follows:
 \[
-\textmd{IFTF}(t, F) =  \log{\frac{1}{P_{\textmd{FeatureTerm}}(t)}}
+\textmd{IFTF}(t, FT_c) =  \log{\frac{1}{P_{\textmd{FeatureTerm}}(t \mid c)}}
 \]
 
 \medskip
@@ -167,7 +179,7 @@ where  $N_{\textmd{TargetTerm}}$ is the total number of target terms,    $n_{\te
 
 \begin{equation}
 \label{ittf}
- \textmd{ITTF}(t, TT) =  \log{\frac{1}{P_{\textmd{TargetTerm}}(f)}}
+ \textmd{ITTF}(f, TT_c) =  \log{\frac{1}{P_{\textmd{TargetTerm}}(f \mid c)}}
 \end{equation}
 From an IR perspective, this notion may be  the  lesser intuitive of the two, since a direct comparison of it  with the TF-IDF formula amounts to the fact that  we replace the notion of `document' with `target terms' and the notion of `term' with `feature terms'.
 
@@ -178,17 +190,17 @@ TF can also be dualized from documents to features and to target terms to obtain
 
 In IR, TF stands for the `within document term frequency'. In a location notation we have:
 \[
-\textmd{freq}(t,d) = n_{\textmd{Doc}}(t,d)
+\textmd{freq}(t,d) = n_{\textmd{Location}}(t,d)
 \]
 Dualizing this to features, we obtains `$k$-close to feature, target  term frequency', abbreviated to {\bf TargetTermFrequency} (TTF), as follows:
 \begin{equation}
 \label{t-f}
-\textmd{freq}(t,f) = n_{\textmd{FeatureTerm}}(t,f)
+\textmd{freq}(t,f) = n_{\textmd{Location}}(t,f)
 \end{equation}
 This is the number of times target  term $t$ occurrs $k$-close to feature $f$.  Using reasoning from previous subsection, we know that one can also have a notion of `$k$-close to target term, feature frequency', abbreviated dually to {\bf FeatureTermFrequency} (FTF), as follows:
 \begin{equation}
 \label{f-t}
-\textmd{freq}(f,t) = n_{\textmd{TartgetTerm}}(f,t)
+\textmd{freq}(f,t) = n_{\textmd{Location}}(f,t)
 \end{equation}
 This is the number of times a feature $f$ occurs $k$-close to a target term $t$.  This is not what one expects the DS method to be counting. Normally, DS methods count how many times a target term occurs close to a feature, i.e. the TTF. 
 
@@ -256,7 +268,7 @@ The question is  which one of these two (or four)  is the one used in DS? Some D
 
   In the next section we show that how the lesser intuitive notion of  {\bf TTF-ITTF} can be used to get DS's {\bf PMI}. 
 
-\subsection{PMI and TTF-ITTF}
+\subsection{PMI and FTF-ITTF}
 \label{PMI-TF-IDF}
 
 The PMI is a favourable feature value for the vector-based representation
