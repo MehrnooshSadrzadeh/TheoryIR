@@ -275,15 +275,16 @@ dimension, and which corresponds to the term dimension.
 Dualizing documents to features,
 we get the following assignments for the location notation:
 \[
-L := F \qquad
+L := FT \qquad
 x := f\qquad
 y := t
 \]
 
 \newcommand{\featureterm}{\textmd{ft}}
 \newcommand{\targetterm}{\textmd{tt}}
+\hrulefill Mehrnoosh: how about this?
 \[
-D := F \qquad
+D := FT \qquad
 d := \featureterm\qquad
 t := \targetterm
 \]
@@ -293,13 +294,11 @@ And obtain a $P_{\textmd{FeatureTerm}}(\targetterm|c)$ (probability of picking a
 \[
 P_{\textmd{Locations}}(\targetterm \mid \featureterm) = \frac{n_{\textmd{Locations}}(\targetterm,\featureterm)}{N_{\textmd{Locations}} (\featureterm)} 
 \]
-\[
+\begin{equation}
 P_{\textmd{FeatureTerm}}(\targetterm \mid c) = \frac{n_{\textmd{FeatureTerm}}(\targetterm,c)}{N_{\textmd{FeatureTerm}} (c)} 
-\]
-\[
-P_{\textmd{TargetTerm}}(\featureterm \mid c) = \frac{n_{\textmd{TargetTerm}}(\featureterm,c)}{N_{\textmd{TargetTerm}} (c)} 
-\]
-where $n_{\textmd{FeatureTerm}}(t,f)$ is the number of times target term $t$ occurred $k$-close to feature $f$ and $N_F$ is the total number of features. Hence the probabilistic version of IFTF becomes as follows:
+\end{equation}
+where $n_{\textmd{FeatureTerm}}(\targetterm,f)$ is the number of times target term $t$ occurred $k$-close to feature $f$ and $N_F$ is the total number of features. Hence the probabilistic version of IFTF becomes as follows:
+\footnote{Here, $f$ is $c$; we are in the IDF (collection) world; no $d$ yet}
 \begin{equation}
 %\label{eqn:InvFeatureTermFreq}
 \label{eqn:iftf}
@@ -314,12 +313,17 @@ These are known in DS as target words and  are words in whose meanings and the s
 This option is the DS dual of IR's  InvTermFreq(doc) used in the context of machine translation, for which one can define a $P_{\textmd{TargetTerm}}(f) $ as the  probability of picking a target term  occurring $k$-close to feature $f$: 
 
 \subsection{IDF and InvTargetTermFreq}
-\[
+Analogously to eq~\ref{eq:p_FeatureTerm_targetterm}, for
+the TargetTerm-based probability of a feature term, we obtain:
+\begin{equation}
 P_{\textmd{TargetTerm}}(\featureterm|c) =
 \frac{n_{\textmd{TargetTerm}}(\featureterm, c)}{N_{\textmd{TargetTerm}}(c)}
-\]
+\end{equation}
 \footnote{changed $f$ to $c$}
-where  $N_{\textmd{TargetTerm}}$ is the total number of target terms,    $n_{\textmd{TargetTerm}}(f, t)$is the number of  times feature term $f$ occurred   $k$-close to target term  $t$,  and TT is the total number of target terms. We thus obtain the notion of  {\bf Term Frequency-Inverse Target Term Frequency} (ITTF) as follows:
+where  $N_{\textmd{TargetTerm}}$ is the total number of target terms,    $n_{\textmd{TargetTerm}}(\featureterm, t)$
+is the number of  times feature term $f$ occurred   $k$-close to target term  $t$,  and TT is the total number of target terms.
+%
+We thus obtain the notion of  {\bf Term Frequency-Inverse Target Term Frequency} (ITTF) as follows:
 
 \begin{equation}
 %\label{eqn:InvTargetTermFreq}
@@ -330,6 +334,34 @@ where  $N_{\textmd{TargetTerm}}$ is the total number of target terms,    $n_{\te
 Comparing eq~\ref{eqn:ittf} to eq~\ref{eqn:iftf} underlines the symmetry.
 
 From an IR perspective, this notion may be  the  lesser intuitive of the two, since a direct comparison of it  with the TF-IDF formula amounts to the fact that  we replace the notion of `document' with `target terms' and the notion of `term' with `feature terms'.
+
+\subsection{InvFeatureTermFreq or InvTargetTermFreq?}
+
+Which of the two candidates is reasonable?
+%
+Given in DS we require to compare \emph{target terms}
+(in IR, we require to compare \emph{document}), the logical consequence is
+that target terms are dual to documents.
+%
+This becomes also evident when considering the vector-based representation.
+
+The target term is a vector in the feature term space.
+If the InvFeatureTermFreq of the target term were a component of the vector,
+then this becomes:
+\[
+\textmd{InvFeatureTermFreq}(\targetterm,c) \cdot \vec{\targetterm}
+\]
+For the InvTargetTermFreq of a feature, the case is different, since for
+every feature term, the target term frequency is different:
+\[
+\targetterm(\featureterm) = \textmd{InvTargetTermFreq}(\featureterm,c) \cdot
+	\textmd{freq($tt$ $k$-close to $ft$)}
+\]
+\footnote{OR ft $k$-close to tt????}
+The precise analysis of this let the duality between target terms and documents
+appear to be obvious.
+%
+It is, however, ... not as obvious :-).
 
 \subsection{Dualizing TF to Feature Term and Target Term Frequency}
 \label{subsec-TF}
