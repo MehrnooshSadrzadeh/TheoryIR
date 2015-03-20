@@ -163,9 +163,36 @@ The averages can be utlised to transform the event spaces:
 P_L(t|c) \cdot \avgdl(c) = \frac{n_L(t,c)}{N_D(c)} = P_D(t|c) \cdot \avgtf(t,c)
 \]
 This equation (referred to as the Poisson bridge, since both sides yield
-the Poisson parameter, the average term frequency, is helpful to insert
+the Poisson parameter, the average term frequency) is helpful to transform
 $P_L(t|c)$ into a Document-based expression, and vice versa.
 
+Other important probabilities are
+the Location-based probability $P_L(t|d)$ of a term given a document, and
+the Location-based probability $P_L(d|c)$ of a document, and
+the Term-based probability $P_T(d|c)$ of a document (dual to the Document-based probability of a term).
+
+$P_L(t|d)$ is also referred to as the within-document probability.
+\[
+P_L(t|d) = \frac{n_L(t,d)}{N_L(d)}
+\]
+
+$P_L(d|c)$ is the probability of document~$d$ based on its document length
+(number of Locations in $d$).
+\[
+P_L(d|c) = \frac{n_L(d,c)}{N_L(c)}
+\]
+
+Instead of locations, the document probability can be based on
+the distinct terms occurring in the document:
+\[
+P_T(d|c) = \frac{n_T(d,c)}{N_T(c)}
+\]
+
+For example, for a document $d=t_1,t_2,t_1$, the Location-based count
+is $n_L(t,d)=3$ (three words), and the Term-based count is
+$n_T(d,c)=2$ ($d$ contains two terms of corpus $c$). the Term-based count is
+
+In the next section we investigate the duality options regarding the IDF.
 
 \subsection{Dualizing IDF to lnvFeatureTermFreq and InvTargetTermFreq}
 \label{subsec-IDF}
@@ -173,7 +200,9 @@ $P_L(t|c)$ into a Document-based expression, and vice versa.
 
 \medskip
 In DS, given is a corpus of text in which one works with the frequency of co-occurrence of a \emph{target term} with \emph{feature terms},
-in a window of length $k$.  Suppose we have a set of  $M$ feature terms  $F = \{f_1, f_2, \cdots, f_M\}$.  To obtain an IR-like measure in DS, the first intuition that comes to mind is do the following:
+in a window of length $k$.
+%
+Suppose we have a set of  $M$ feature terms  $FT = \{f_1, f_2, \cdots, f_M\}$.  To obtain an IR-like measure in DS, the first intuition that comes to mind is do the following:
 
 \begin{enumerate}
 \item   Replace the notion of a  \emph{document}  with the notion of  \emph{feature}, 
@@ -184,9 +213,9 @@ This provide  us with the notion of {\bf Inverse Feature Term Frequency}  (IFTF)
 
 \begin{equation}
 \label{iftf}
-\textmd{IFTF}(t, F) = \log{{M} \over {\mid \{f \in F \mid t  \ k\textmd{close-to} \ f \} \mid}}
+\textmd{IFTF}(t, FT) = \log{{M} \over {\mid \{f \in FT \mid t  \ k\textmd{close-to} \ f \} \mid}}
 \end{equation}
-where $ \mid \{f \in F \mid t  \ k\textmd{close-to} \ f \} \mid$ is the total number of features to which target  term $t$ occurred $k$ words close to. 
+where $ \mid \{f \in FT \mid t  \ k\textmd{close-to} \ f \} \mid$ is the total number of features to which target  term $t$ occurred $k$ words close to. 
 
 In order to view things probabilistically, first recall the same process in IR where there we have the following assignments to the location based notation:
 \[
