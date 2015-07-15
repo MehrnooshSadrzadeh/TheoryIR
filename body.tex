@@ -1,26 +1,214 @@
-\section{Introduction \& Motivations}
+\appendix
+
+\section{PMI as a normalisation measure rather than similarity}
+
+Difference between PMI(ft, tt) and PMI(tti, ttj)
 
 
-The term TF-IDF is often used in DS as a weighting scheme when it comes to normalizing  the number of times a target term occurred close to (e.g. in a window of $k$-words) a feature. The notion of TF-IDF comes from and is a well-known notion, however, this known notion is not what is used as TF-IDF in DS. Here ,  most known and worked-with of  is point wise mutual information or  PMI, defined as follows:
+This  shows  that PMI is  the right dual notion of IDF, but  it also shows a short coming of the usage of the PMI measure  in NLP   (looking at it from an IR point of view). Where as in IR, the PMI has a TF component ($n_L(t,d)$), in NLP, this component (i.e. its dual  FTF) is missing.   In IR terms, this means that PMI does have a  discrimination factor for the feature terms, but the impact of the  frequency between target terms and feature terms is played down.  One can try overcome this problem by  multiplying the PMI with an explicit FTF, that is form a measure such as $\FTF \cdot \textmd{PPMI}$, but this is now doing another extreme: playing up the impact of the target term-feature term frequency.  
+
+ We conjecture that  the FTF.ITTF itself would be the more appropriate choice, hence adhering to the duality
+ \[
+\TF \cdot \IDF \equiv \textmd{Raw} \cdot \PMI
+\]
+
+Once PMI is computed from ITTF, other DS measures are also easily obtainable, see  table \ref{tb-ds-ir}.
+ 
+\begin{figure*}[htb]
+  \centering
+  \begin{tabular}{|l|c|c|l|}
+  \hline
+  DS Measure  && IR Dual &\\
+  \hline
+ Raw Counts  &$n_{\textmd{TT}}(\featureterm,\targetterm)$ & TF &$n_{\textmd{D}}(t,d)$\\
+ &&&\\
+ PMI & $\log{\frac{P(\featureterm \mid \targetterm)}{P(\featureterm)}}$  &  probabilistic version of IDF  &$\log{\frac{P(t \mid q)}{P(t)}}$\\
+ &&&\\
+ Conditional Probability &$ \frac{P(\featureterm \mid \targetterm)}{P(\featureterm)}$ &  un-logged version of above  &$\frac{P(t\mid q)}{P(t)}$ \\
+  &&&\\
+  Ratio Likelihood & $\frac{P(\featureterm \mid \targetterm)}{P(\featureterm)P(\targetterm)}$ & $\frac{\textmd{un-logged version of above }}{P(q)}$ & $\frac{P(t \mid q)}{P(t) P(q)}$ \\
+ &&&\\
+ LMI && FTF.ITTF&\\
+  \hline
+  \end{tabular}
+  \caption{Nothing}
+  \label{tb-ds-ir}
+\end{figure*}
+
+
+
+\section{DQI}
+
+------Thomas, is the following correct?-----
+Yes.
+
+Finally, note that in IR, PMI is a measure used to compute the degree of independence between the document and query:
 \[
- PMI (f, t) =  \log{{P(f \mid t)} \over{P(f)}}
- \]
-ADD REFERENCE TO MIRELLA'S PAPER AND MAY BE OTHER THINGS
-
-In this paper first we solve the mystery of why  the above (and its brothesr and sisters: LMI, Likelihood Ration, and PPMI) may be called TF-IDF or be a TF-IDF-based measure. We discover new relationships between IR's TF-IDF and DS's PMI. It turns out that the IR notion of `relevance'  is also closely related to the DS notion of `cosine similarity'. 
-
-Then, from single terms we move to phrases and show how DS notion of  compositionality relates to a similar notion in  IR's, used in semantic IR and applied to propositions. 
+\log\textmd{DQI}(d,q) = \PMI(d,q)
+\] 
+So what DS is calculating is DQI$(\targetterm_1, \targetterm_2)$, that is,  the degree of independence between target terms.
 
 
-\hrulefill
 
-Depending on the co-occurrence quantification, and depending on the composition for s-v-o, for some expressions, one  gets equivalences between geometric and probabilistic (and information-theoretic) expressions.
+$\PMI(\targetterm_d,\targetterm_q)$ corresponds to $\DQI(d,q)$ (ommitting details regarding the log transformation).
+
+$\PMI(\targetterm_d,\featureterm_j)$ corresponds to
+$\PMI(d,t)$; this is the LM-side of the DQI, i.e.~the decomposition of the query event.
+
+$\PMI(\targetterm_q,\featureterm_j)$ corresponds to
+$\PMI(q,t)$; this is the TF-IDF side
+of the DQI, i.e.~the decomposition of the document event.
+
+Since the PMI is symmetric (WELL, not if we decompose events!), ...
 
 
-\cite{Wong/Yao:95}:
+
+
+
+\section{PMI, IDF and ITTF (query)}
+\label{sec:PMI-IDF-ITTF-(query)}
+
+
+Let $d$ be a document, $q$ a query, and $t$ a term.
+The logarithm of likelihood ratio of document and query is:
+\[
+\log\frac{P(d|q)}{P(d)} =
+	\sum_t n_L(t,d) \cdot \log\frac{P(t|q)}{P(t)}
+\]
+Here, $n_L(t,d)=\textmd{freq}(t,d)$ is the within-document term frequency
+quantification.
+
+The likelihood ratio is a measure of (in)dependence.
+The decomposition on the right side leads to the measure of independence
+between term and query.
+\[
+\frac{P(t|q)}{P(t)} = \frac{P(t,q)}{P(t) \cdot P(q)} = \frac{P(q|t)}{P(q)}
+\]
+For NLP, let $\targetterm_i$ and $\targetterm_j$ be two target terms
+(for which we want to establish a similarity).
+$\targetterm_i$ is the ``document" and ``$\targetterm_j$" is the query.
+Then:
+\[
+\log\frac{P(\targetterm_i|\targetterm_j)}{P(\targetterm_i)} =
+	\sum_f \textmd{freq}(\featureterm,\targetterm_i) \cdot \log\frac{P(\featureterm|\targetterm_j)}{P(\featureterm)}
+\]
+The decomposition on the right side ...:
+\[
+\frac{P(\featureterm|\targetterm_j)}{P(\featureterm)} =
+\frac{P(\textmd{feature}|\textmd{target})}{P(\textmd{feature})} =
+\frac{P(\textmd{target}|\textmd{feature})}{P(\textmd{target})}
+\]
+
+The problem is that the term probability (the feature probability)
+is based on the ``total" occurrence, whereas the IDF is based
+on counting documents.
+In other words,
+the feature probability (for IR, term probability) is based on
+the occurrence of the event:
+$P(\textmd{feature term}):=P_{\textmd{L}}(\textmd{feature term})$
+is based on the Locations (the number of times the feature occurs), so is
+$P(\targetterm):=P_{\textmd{L}}(\targetterm)$.
+
+Transformation to the ``document" (the target term) via Poisson bridge.
+...
+
+For IR:
+\[
+P(t) = P(t|q) \cdot P_{\textmd{D}}(t)
+\]
+\[
+P(t|q) = \avgtf(t) / \avgdl
+\]
+Therefore:
+\[
+\log\frac{P(t|q)}{P(t)} = \log\frac{1}{P_{\textmd{D}}(t)}
+\]
+
+For NLP/PMI:
+\[
+P(\featureterm) = P(\featureterm|\targetterm) \cdot P_\textmd{TT}(\featureterm)
+\]
+\begin{equation}
+\label{eq:pmi-log}
+\log\frac{P(\featureterm|\targetterm_j)}{P(\featureterm)} = \log\frac{1}{P_\textmd{TT}(\featureterm)}
+\end{equation}
+
+This shows that the dual to TF.IDF in DS is Raw.PMI, 
+\[
+\TF \cdot \IDF \equiv \textmd{Raw} \cdot \PMI
+\]
+Herein, the log expression expresses how discriminative the feature is. 
+
+Once PMI is computed from ITTF, other DS measures are also easily obtainable, see  table \ref{tb-ds-ir}.
+ 
+\begin{figure*}[htb]
+  \centering
+  \begin{tabular}{|l|c|c|l|}
+  \hline
+  DS Measure  && IR Dual &\\
+  \hline
+ Raw Counts  &$n_{\textmd{TT}}(\featureterm,\targetterm)$ & TF &$n_{\textmd{D}}(t,d)$\\
+ &&&\\
+ PMI & $\log{\frac{P(\featureterm \mid \targetterm)}{P(\featureterm)}}$  &  probabilistic version of IDF  &$\log{\frac{P(t \mid q)}{P(t)}}$\\
+ &&&\\
+ Conditional Probability &$ \frac{P(\featureterm \mid \targetterm)}{P(\featureterm)}$ &  un-logged version of above  &$\frac{P(t\mid q)}{P(t)}$ \\
+  &&&\\
+  Ratio Likelihood & $\frac{P(\featureterm \mid \targetterm)}{P(\featureterm)P(\targetterm)}$ & $\frac{\textmd{un-logged version of above }}{P(q)}$ & $\frac{P(t \mid q)}{P(t) P(q)}$ \\
+ &&&\\
+ LMI && FTF.ITTF&\\
+  \hline
+  \end{tabular}
+  \caption{Nothing}
+  \label{tb-ds-ir}
+\end{figure*}
+
+
+This  shows  that PMI is  the right dual notion of IDF, but  it also shows a short coming of PMI   (looking at it from an IR point of view): the FTF component of PMI is also  logarithmic. In IR terms, this means that PMI does have a  discrimination factor for the feature terms, but the impact of the  frequency between target terms and feature terms is played down. 
+
+One can try overcome this problem by  multiplying the PMI with an explicit FTF, that is form a measure such as $\FTF \cdot \textmd{PPMI}$, but this is now doing another extreme: playing up the impact of the target term-feature term frequency.  
+
+But we conjecture that  the FTF.ITTF itself would be the more appropriate choice.   This measure will allow us to reason about the similarity between two terms by dualizing from  the similarity between document and query. That is, we can define:  $\textmd{sim}(\targetterm_i,\targetterm_j)$ is high if we have:
+\begin{enumerate}
+\item Many feature terms occur $k$-close-to  subject, verb, and object.
+\item The feature terms are rare.
+\end{enumerate}
+
+------Thomas, is the following correct?-----
+Yes.
+
+Finally, note that in IR, PMI is a measure used to compute the degree of independence between the document and query:
+\[
+\log\textmd{DQI}(d,q) = \PMI(d,q)
+\] 
+So what DS is calculating is DQI$(\targetterm_1, \targetterm_2)$, that is,  the degree of independence between target terms.
+
+
+
+$\PMI(\targetterm_d,\targetterm_q)$ corresponds to $\DQI(d,q)$ (ommitting details regarding the log transformation).
+
+$\PMI(\targetterm_d,\featureterm_j)$ corresponds to
+$\PMI(d,t)$; this is the LM-side of the DQI, i.e.~the decomposition of the query event.
+
+$\PMI(\targetterm_q,\featureterm_j)$ corresponds to
+$\PMI(q,t)$; this is the TF-IDF side
+of the DQI, i.e.~the decomposition of the document event.
+
+Since the PMI is symmetric (WELL, not if we decompose events!), ...
+
+
+
+
+\section{Deriving the DS phrase Similarity in IR}
+\label{sec:DS-Phrase-Similarity-vs-XF-IDF}
+
+
+In this section we show how the degree of similarity of DS can be derived from a generalised notion of inner product in IR and how this yields a symmetric version of the degree of implication in IR. 
+ 
+In order to be able to measure the DS similarity of a document and a query, one has to form their inner product:
 \[
 \vec{d} \cdot \vec{q}
 \]
+where the vectors of document and query are defined (for a space of dimension three) as follows:
 \[
 \vec{d} =
 	\left(
@@ -40,10 +228,11 @@ Depending on the co-occurrence quantification, and depending on the composition 
 	\end{matrix}
 	\right)
 \]
+Recall the degree of implication equation:
 \[
 P(q|d) = \sum_t P(q|t) \cdot P(t|d)
 \]
-Rewrite as follows:
+Rewrite it as follows:
 \[
 P(q|d) = \frac{1}{P(d)} \cdot \sum_t P(q|t) \cdot P(d|t) \cdot P(t)
 \]
@@ -60,10 +249,11 @@ to make $\vec{d}$ and $\vec{q}$ having the same semantics:
 	\end{matrix}
 	\right)
 \]
-Generalised inner product:
+The rewriting is obtainable by using a generalised inner product:
 \[
 \vec{d}^T \cdot G \cdot \vec{q}
 \]
+where the  $G$ operator is defined as follows:
 \[
 G=
 \left[
@@ -76,506 +266,71 @@ P(t_1) \\
 \]
 
 
-%The starting point of this approach is the  window-based  vector space models of natural language \cite{Schutze}, also referred to by \emph{distributional} models of meaning. These are inspired by  the vector space models of  Information Retrieval \cite{Salton}. In IR, terms are vectors whose coordinates are their degree of appearance in documents, and symmetrically documents can also be seen as vectors whose coordinates are the degree of appearance of words in them. The vector spaces in which meanings of words live have documents as basis vectors. These models have been used to retrieve documents that are relevant to a query, seen as a collection of terms (words). The window-based vector space models are slightly different, herein,  basis vectors are other words (sometimes also referred to by context words or features). In such models, one fixes a neighbourhood window of $k$ words (e.g. $k = 5$) then computes the degree of co-occurrence of a word with other words within that window. Hence, each words will have a vectors and the distance between the word vectors can be used to reason about their  similarity of meanings. The origins of this work and its application to word meaning, similarity, and disambiguation  goes back to the work of Schutze. Later various different normalisation schemes and distances were established and experimented with and it turned out the the cosine of the angle between the vectors is a good measure of similarity, e.g. see \cite{BullerinaLevy,Curran}. 
-
-
-
-
-
-\section{Single Terms}
-
-\subsection{Basic Notation}
-We start with very basic concepts from IR.  Given a  single term $t$ (in DS known as a `word'),  a document $d$, and a set of documents $D = \{d_1, d_2, \cdots, d_N\}$,  one computes  the frequency  of   $t$  in $d$, multiplied by  the logarithm of the  total number of documents $n$ divided by the number of documents with  term $t$ in them (for the remainder of this section `term' stands for `single term'). The most traditional way of writing this formula is as  follows:
-\begin{equation}
-\label{tf-idf}
-\TF(t,d) \cdot \IDF(t, D) =
-	\textmd{freq}(t, d) \cdot
-	\log{{N} \over {\mid \{d \in D \mid t \in d\}\mid}}
-\end{equation}
-To be able to relate this to PMI, we need to first turn the different expressions of the above into probabilities.
-This is possible by fixing an appropriate notion of event space, we follow the location-based approach of \cite{Roelleke:Book:2013} and introduce the following notation:
-\begin{itemize}
-\item $L = \{l_1, l_2, \cdots, l_L\}$ a set of locations
-	\footnote{$l_L$!?}
-\item $N_{\textmd{Location}}$ the total number of locations, i.e. size of $L$.
-\item $n_{\textmd{Location}}(x,y)$ number of locations in which event $x$ `occurs with' event $y$.
-\end{itemize}
-
-Then can define a probability $P_{\textmd{Location}}(x)$ as follows
+As a result  we obtain a symmetric version of implication, that is we have:
 \[
-P_{\textmd{Location}}(x \mid y) = \frac{n_{\textmd{Location}}(x,y)}{N_{\textmd{Location}}(y)}
-\]
- this is the conditional probability of $x$ occurring/happening given $y$.
-%
-Using this notation as guideline, we proceed as follows:   first turn the IDF part of the TF-IDF formula into probabilities and develop its DS dual concepts, then do the same for TF, and  put the two together.  This provides us with effectively two dual TF-IDF notions for DS.  But which ones are used in DS and which ones are good to use? In the last subsection of this section, we show how one can obtain PMI from ??? and argue why the other  one is terribly bad. 
+P(d \to q) \equiv P(q \to d) \equiv \vec{d}^T \cdot G \cdot \vec{q}
+\] 
+This is the same as the inner product, hence dualists the similarity measure of DS. 
+
+\section{NLP vs IR}
+
+\begin{table*}[htbp]
+\begin{tabularx}{\textwidth}{l|XX}
+& NLP & IR\\
+\hline
+co-occurrence
+&
+        co-occurrence between the semantic symbol (target word) and feature words
+        &
+        co-occurrence between the semantic symbols (words) themselves
+        \\
+        \hline
+representation of words
+        & distributional & symbolic\\
+        \hline
+single vs set & similarity between two
+    \emph{single phrases}
+    & relationship (implication, entailment) between two
+    \emph{sets of phrases}\\
+
+symmetric yes/no &
+    similarity is a symmetric function &
+relationship between sets is not symmetric; moreover, the phrase-based score is not necessarily symmetric\\
+\hline
+similar/relevant
+& phrase $t_i$ is similar to phrase $t_j$ &
+document~$d$ (source) is relevant with respect to query~$q$ (target)\\
+\hline
+scores
+& the similarity score is estimated
+based on the distance/angle between distributional vectors
+& the relevance score is estimated
+based on the retrieval model that computes the implication between the set of document and the set of query propositions\\
+probabilistic semantics
+& (in)dependence between target word and feature word: $\frac{P(w_t,w_f)}{P(w_t) \cdot P(w_f)}$
+& (in)dependent between document and query:
+$\frac{P(d,q)}{P(d) \cdot P(q)}$\\
+\hline
+& for this work: virtual query has exactly one proposition; virtual document has exactly one condition; therefore, the similarity score $\textmd{sim}(\textmd{phrase1},\textmd{phrase2})$ can be compared to the retrieval score
+$\textmd{RSV}(\textmd{document: set of phrases},\textmd{query: set of phrases})$.
+
+TODO: how to get this over two columns
+\\
+        \hline
+\end{tabularx}
+\end{table*}
+
+\section{data}
+
+\begin{verbatim}
+Target,Context,"N5(t, c)",N(t),N(c),P(c),P5(c|t),R5,PMI5,PPMI5,SIM_ppmi,SIM_ratio
+man,woman,72594,955363,576966
+
+0.00025625057145412807,0.07598577713392711,296.5292007066976,5.692145698265373,5.692145698265373
+
+0.9377142577638676,0.7264246690255856
+\end{verbatim}
 
-
-\hrulefill Mehrnoosh: extended notation
-
-To prepare the notation for investigating the dualities between IR and DS,
-that is between different event spaces and events,
-we utilise a more formal and generic notation:
-\[
-\begin{array}{ll}
-N_D(c) := |D_c| \textmd{: number of Documents in collection/corpus $c$}\\
-N_T(c) := |T_c| \textmd{: number of Terms in collection/corpus $c$}\\
-N_L(c) := |L_c| \textmd{: number of Locations in collection/corpus $c$}\\
-n_D(t,c) := \mid \{d \in D_c \mid t \ \textmd{occurs in} \ d\}\mid\\
-n_T(d,c) := \mid \{t \in T_c \mid d \ \textmd{contains} \ t\} \mid\\
-n_L(t,c) := \mid \{l \in L_c \mid t \ \textmd{occurs at} \ l\} \mid\\
-n_L(d,c) := \mid \{l \in L_c \mid d \ \textmd{contains} \ l\} \mid\\
-\end{array}
-\]
-Then, the TF-IDF weight is:
-\begin{equation}
-\label{tf-idf}
-\TF(t,d) \cdot \IDF(t,c) =
-	\textmd{freq}(t, d) \cdot
-	\log{{N_D(c)} \over n_D(t,c)}
-\end{equation}
-The argument of the logarithm is the Document-based term probability:
-\[
-P_{D}(t|c) =\frac{n_D(t,c)}{N_D(c)}
-\]
-In traditional IR, the numerator is refered to as the document frequency:
-$\df(t,c):=n_D(t,c)$.
-
-Is is important to make explicit the difference between the Document-based
-term probability, $P_D(t|c)$, and the Location-based term probability, $P_L(t|c)$:
-\[
-P_{L}(t|c) =\frac{n_L(t,c)}{N_L(c)}
-\]
-For example, a term that occurs $n_L(t,c)=1000$ locations of $N_L(c)=10^8$ locations,
-may occur in $n_D(t,c)=500$ of $N_D(c)=10^6$ documents.
-%
-The average document length is $\avgdl(c)=N_L(c)/N_D(c)=100$, and the
-average term frequency is $n_L(t,c)/N_D(c)=1000/10^6$, whereas the
-elite average is $\avgtf(t,c)=n_L(t,c)/n_D(t,c)=1000/500=2$,
-i.e.~the elite average is the average
-over the documents in which the term occurs.
-%
-The elite average is a measure of ``burstiness", i.e.~$\avgtf(t,c)=n_L(t,c)$ for
-an extremely bursty term (all occurrences in one document, and $\avgtf(t,c)=1$
-for a non-bursty term.
-%
-The averages can be utlised to transform the event spaces:
-\[
-P_L(t|c) \cdot \avgdl(c) = \frac{n_L(t,c)}{N_D(c)} = P_D(t|c) \cdot \avgtf(t,c)
-\]
-This equation (referred to as the Poisson bridge, since both sides yield
-the Poisson parameter, the average term frequency) is helpful to transform
-$P_L(t|c)$ into a Document-based expression, and vice versa.
-
-Other important probabilities are
-the Location-based probability $P_L(t|d)$ of a term given a document, and
-the Location-based probability $P_L(d|c)$ of a document, and
-the Term-based probability $P_T(d|c)$ of a document (dual to the Document-based probability of a term).
-
-$P_L(t|d)$ is also referred to as the within-document probability.
-\[
-P_L(t|d) = \frac{n_L(t,d)}{N_L(d)}
-\]
-
-$P_L(d|c)$ is the probability of document~$d$ based on its document length
-(number of Locations in $d$).
-\[
-P_L(d|c) = \frac{n_L(d,c)}{N_L(c)}
-\]
-
-Instead of locations, the document probability can be based on
-the distinct terms occurring in the document:
-\[
-P_T(d|c) = \frac{n_T(d,c)}{N_T(c)}
-\]
-
-For example, for a document $d=t_1,t_2,t_1$, the Location-based count
-is $n_L(t,d)=3$ (three words), and the Term-based count is
-$n_T(d,c)=2$ ($d$ contains two terms of corpus $c$). the Term-based count is
-
-In the next section we investigate the duality options regarding the IDF.
-
-\subsection{Dualizing IDF to lnvFeatureTermFreq and InvTargetTermFreq}
-\label{subsec-IDF}
-
-
-\medskip
-In DS, given is a corpus of text in which one works with the frequency of co-occurrence of a \emph{target term} with \emph{feature terms},
-in a window of length $k$.
-%
-Suppose we have a set of  $M$ feature terms  $FT = \{f_1, f_2, \cdots, f_M\}$.  To obtain an IR-like measure in DS, the first intuition that comes to mind is do the following:
-
-\begin{enumerate}
-\item   Replace the notion of a  \emph{document}  with the notion of  \emph{feature}, 
-\item  Replace the notion of `a term being in a document'  with the notion of `a target  term occurring $k$ words close to a feature'.  In other words,  the  simple co-occurrence concept `within document' is replaced with the window-based co-occurrence concept of  `$k$-closed to feature'. 
-\end{enumerate}
-
-This provide  us with the notion of {\bf Inverse Feature Term Frequency}  (IFTF)  (the word `term'  is to emphasise that features are words\footnote{Features need not always be words, but for the cases which they are not, they are associated with a set words, so when it comes down to extracting numerical counts from a corpus, one is considering single words, one at a time. }),   as follows:
-
-\begin{equation}
-\label{iftf}
-\textmd{IFTF}(t, FT) = \log{{M} \over {\mid \{f \in FT \mid t  \ k\textmd{close-to} \ f \} \mid}}
-\end{equation}
-where $ \mid \{f \in FT \mid t  \ k\textmd{close-to} \ f \} \mid$ is the total number of features to which target  term $t$ occurred $k$ words close to. 
-
-In order to view things probabilistically, first recall the same process in IR where there we have the following assignments to the location based notation:
-\[
-L := D\qquad
-x := t \qquad y := d
-\]
-\[
-P_{\textmd{Location}}(t \mid c) =  \frac{n_{\textmd{Location}}(t,c)}{N_{\textmd{Location}}(c)} 
-\]
-\[
-P_{\textmd{Location}}(t \mid d) =  \frac{n_{\textmd{Location}}(t,d)}{N_{\textmd{Location}}(d)} 
-\]
-Then one obtains  a $P_{\textmd{Doc}}(t)$,  as follows:
-\[
-P_{\textmd{Doc}}(t\mid c) = \frac{n_{\textmd{Doc}}(t,c)}{N_{\textmd{Doc}}(c)} 
-\]
-and the IDF expression
-becomes equivalent to the following 
-\footnote{is defined as follows}
-\begin{equation}
-\label{eqn:idf}
-\IDF(t, c) := \textmd{InvDocFreq}(t,c) := \log{\frac{1}{P_{\textmd{Doc}}(t \mid c)}}
-\end{equation}
-
-
-\hrulefill Mehrnoosh: see here
-
-Accordingly, there is the Term-based document probability:
-\[
-P_{\textmd{Term}}(d\mid c) = \frac{n_{\textmd{Term}}(d,c)}{N_{\textmd{Term}}(c)} 
-\]
-The Term-based document probability is high for documents that contain
-many distinct terms.
-
-This leads to the notion of the ITF:
-\begin{equation}
-\label{eqn:itf}
-\ITF(d, c) :=
-	\textmd{InvTermFreq}(d,c) := \log{\frac{1}{P_{\textmd{Term}}(d \mid c)}}
-\end{equation}
-Comparing eqn~\ref{eqn:idf} against eqn~\ref{eqn:itf} makes explicit the
-dualities: $\textmd{Term}\equiv\textmd{Doc}$ and $t\equiv d$.
-
-The ITF of a document is high if it contains few distinct terms, i.e.~the ITF
-is high for short documents (short in the sense of few distinct terms,
-the multiple occurrences of a term are not considered).
-
-Next, we discuss the duality between IR and DS.
-%
-The question is which IR dimension corresponds to which DS dimension.
-In traditional IR, there is the term-document matrix $T\times D$, and
-in DS, there is the targetTerm-featureTerm matrix $TT \times FT$.
-Which of target term and feature term corresponds to the document
-dimension, and which corresponds to the term dimension?
-
-\footnote{TT: is in IR the term-term matrix; names ...}
-
-\hrulefill
-
-\subsection{IDF and InvFeatureTermFreq}
-
-Dualizing documents to features,
-we get the following assignments for the location notation:
-\[
-L := FT \qquad
-x := f\qquad
-y := t
-\]
-
-\newcommand{\featureterm}{\textmd{ft}}
-\newcommand{\targetterm}{\textmd{tt}}
-\hrulefill Mehrnoosh: how about this?
-\[
-D := FT \qquad
-d := \featureterm\qquad
-t := \targetterm
-\]
-
-And obtain a $P_{\textmd{FeatureTerm}}(\targetterm|c)$ (probability of picking a feature with target term $t$ occurring $k$-close to it) as follows
-\footnote{prob of picking a feature???}
-\[
-P_{\textmd{Locations}}(\targetterm \mid \featureterm) = \frac{n_{\textmd{Locations}}(\targetterm,\featureterm)}{N_{\textmd{Locations}} (\featureterm)} 
-\]
-\begin{equation}
-P_{\textmd{FeatureTerm}}(\targetterm \mid c) = \frac{n_{\textmd{FeatureTerm}}(\targetterm,c)}{N_{\textmd{FeatureTerm}} (c)} 
-\end{equation}
-where $n_{\textmd{FeatureTerm}}(\targetterm,f)$ is the number of times target term $t$ occurred $k$-close to feature $f$ and $N_F$ is the total number of features. Hence the probabilistic version of IFTF becomes as follows:
-\footnote{Here, $f$ is $c$; we are in the IDF (collection) world; no $d$ yet}
-\begin{equation}
-%\label{eqn:InvFeatureTermFreq}
-\label{eqn:iftf}
-\textmd{InvFeatureTermFreq}(\targetterm, c) :=
-	\log{\frac{1}{P_{\textmd{FeatureTerm}}(\targetterm \mid c)}}
-\end{equation}
-
-\medskip
-The above computations provide us with a vector representation for documents in IR and for features in DS. However, in DS, one is interested in having vectors for target terms.
-
-These are known in DS as target words and  are words in whose meanings and the similarity of meanings therein we are interested.
-This option is the DS dual of IR's  InvTermFreq(doc) used in the context of machine translation, for which one can define a $P_{\textmd{TargetTerm}}(f) $ as the  probability of picking a target term  occurring $k$-close to feature $f$: 
-
-\subsection{IDF and InvTargetTermFreq}
-Analogously to eq~\ref{eq:p_FeatureTerm_targetterm}, for
-the TargetTerm-based probability of a feature term, we obtain:
-\begin{equation}
-P_{\textmd{TargetTerm}}(\featureterm|c) =
-\frac{n_{\textmd{TargetTerm}}(\featureterm, c)}{N_{\textmd{TargetTerm}}(c)}
-\end{equation}
-\footnote{changed $f$ to $c$}
-where  $N_{\textmd{TargetTerm}}$ is the total number of target terms,    $n_{\textmd{TargetTerm}}(\featureterm, t)$
-is the number of  times feature term $f$ occurred   $k$-close to target term  $t$,  and TT is the total number of target terms.
-%
-We thus obtain the notion of  {\bf Term Frequency-Inverse Target Term Frequency} (ITTF) as follows:
-
-\begin{equation}
-%\label{eqn:InvTargetTermFreq}
-\label{eqn:ittf}
-\textmd{InvTargetTermFreq}(\featureterm, c) :=
-\log{\frac{1}{P_{\textmd{TargetTerm}}(\featureterm \mid c)}}
-\end{equation}
-Comparing eq~\ref{eqn:ittf} to eq~\ref{eqn:iftf} underlines the symmetry.
-
-From an IR perspective, this notion may be  the  lesser intuitive of the two, since a direct comparison of it  with the TF-IDF formula amounts to the fact that  we replace the notion of `document' with `target terms' and the notion of `term' with `feature terms'.
-
-\subsection{InvFeatureTermFreq or InvTargetTermFreq?}
-
-Which of the two candidates is reasonable?
-%
-Given in DS we require to compare \emph{target terms}
-(in IR, we require to compare \emph{document}), the logical consequence is
-that target terms are dual to documents.
-%
-This becomes also evident when considering the vector-based representation.
-
-The target term is a vector in the feature term space.
-If the InvFeatureTermFreq of the target term were a component of the vector,
-then this becomes:
-\[
-\textmd{InvFeatureTermFreq}(\targetterm,c) \cdot \vec{\targetterm}
-\]
-For the InvTargetTermFreq of a feature, the case is different, since for
-every feature term, the target term frequency is different:
-\[
-\targetterm(\featureterm) = \textmd{InvTargetTermFreq}(\featureterm,c) \cdot
-	\textmd{freq($tt$ $k$-close to $ft$)}
-\]
-\footnote{OR ft $k$-close to tt????}
-The precise analysis of this let the duality between target terms and documents
-appear to be obvious.
-%
-It is, however, ... not as obvious :-).
-
-\subsection{Dualizing TF to Feature Term and Target Term Frequency}
-\label{subsec-TF}
-
-TF can also be dualized from documents to features and to target terms to obtain the corresponding expressions in each computation formula.  We refer to these by Feature Term Frequency and Target Term  Frequency. We still keep the  word `term'  in these expressions and add adjectives `feature' and `target'  to it so we can distinguish them from the previous notion of term in IR. 
-
-In IR, TF stands for the `within document term frequency'. In a location notation we have:
-\[
-\textmd{freq}(t,d) = n_{\textmd{Location}}(t,d)
-\]
-Dualizing this to features, we obtains `$k$-close to feature, target  term frequency', abbreviated to {\bf TargetTermFrequency} (TTF), as follows:
-\begin{equation}
-\label{t-f}
-\textmd{freq}(t,f) = n_{\textmd{Location}}(t,f)
-\end{equation}
-This is the number of times target  term $t$ occurrs $k$-close to feature $f$.  Using reasoning from previous subsection, we know that one can also have a notion of `$k$-close to target term, feature frequency', abbreviated dually to {\bf FeatureTermFrequency} (FTF), as follows:
-\begin{equation}
-\label{f-t}
-\textmd{freq}(f,t) = n_{\textmd{Location}}(f,t)
-\end{equation}
-This is the number of times a feature $f$ occurs $k$-close to a target term $t$.  This is not what one expects the DS method to be counting. Normally, DS methods count how many times a target term occurs close to a feature, i.e. the TTF. 
-
-In an ideal DS scenario, all the words from the vocabulary of a language can be both features and targets. In this case, evidently, equations \ref{t-f} and \ref{f-t} amount to the same thing. The number of times a target term occurred $k$-close to a feature is the same as the number of times a feature occurs $k$-close to a target term, that is
-\begin{equation}
-\label{ttf=ftf}
-\textmd{freq}(t,f) = \textmd{freq}(f,t) 
-\end{equation}
-However, in practical scenarios, both of these are separate subsets of the vocabulary, with feature words being specific lemmas, topics, grammatical relations, etc. 
-
-\subsection{Dualizing TF-IDF}
-\label{subsec-TF-IDF}
-
-Putting  the equation developed in subsections \ref{subsec-IDF} and \ref{subsec-TF} together,  we obtain four dual notions  for TF-IDF in DS. If one takes the  ideal scenario to be true, then  $\textmd{freq}(t,f) = \textmd{freq}(f,t)$ and these four reduce to  two.  To be systematic we list all four options below: 
-
-\begin{enumerate}
-\item {\bf Feature Term Frequency-Inv Feature Term Frequency} (FTF.IFTF) 
-\begin{equation}
-\label{ftf-iftf}
-\textmd{FTF}(t,f) \cdot \textmd{IFTF}(t, F) =  \textmd{freq}(f, t) \cdot \log{\frac{1}{P_{\textmd{FeatureTerm}}(t)}}
-\end{equation}
-\item  {\bf Target Term Frequency-Inv Feature Term Frequency} (TTF.IFTF)
-\begin{equation}
-\label{ttf-iftf}
-\textmd{TTF}(t,f) \cdot \textmd{IFTF}(t, F) =  \textmd{freq}(t,f) \cdot \log{\frac{1}{P_{\textmd{FeatureTerm}}(t)}}
-\end{equation}
-\item {\bf Feature Term Frequency-Inv Target Term Frequency} (FTF.ITTF)
-\begin{equation}
-\label{ftf-ittf}
-\textmd{FTF}(t,f) \cdot \textmd{ITTF}(t, TT) =  \textmd{freq}(f, t) \cdot \log{\frac{1}{P_{\textmd{TargetTerm}}(f)}}
-\end{equation}
-\item  {\bf Target Term Frequency-Inv Target Term Frequency} (TTF.ITTF)
-\begin{equation}
-\label{ttf-ittf}
-\textmd{TTF}(t,f) \cdot \textmd{ITTF}(t, TT) =  \textmd{freq}(t, f) \cdot \log{\frac{1}{P_{\textmd{TargetTerm}}(f)}}
-\end{equation}
-\end{enumerate}
-
-In the ideal case we have TTF = FTF, and hence 
-\begin{quote}
-FTF.IFTF = TTF.IFTF \qquad FTF.ITTF = TTF.ITTF. 
-\end{quote}
-
-The question is  which one of these two (or four)  is the one used in DS? Some DS measures (from \cite{BullineriaLevy} CITE and CHECK Turney-Pantel) and their IR duals are shown in table \ref{tb-ds-ir}, obtained by following the latter approach (TTF.ITTF) and  replacing  `document' with `target term'  ($d$ with $t$) and  `term' with `feature term'  ($t$ with $f$).
-  
- 
-\begin{figure*}[htb]
-  \centering
-  \begin{tabular}{|l|c|c|l|}
-  \hline
-  DS Measure  && IR Dual &\\
-  \hline
- Raw Counts  &$n_{\textmd{TargetTerm}}(f,t)$ & TF &$n_{\textmd{Doc}}(t,d)$\\
- &&&\\
- Conditional Probability &$ \frac{P(f,t)}{P(t)}$ & unknown &$\frac{P(t,d)}{P(d)}$\\
- &&&\\
- Ratio Likelihood & $\frac{P(f \mid t)}{P(f)P(t)}$ & unknown & $\frac{P(t \mid d)}{P(t)P(d)}$\\
- &&&\\
- PMI & $\log{\frac{P(f \mid t)}{P(f)P(t)}}$  & see  subsection \ref{PMI-TF-IDF}&$\log{\frac{P(t \mid d)}{P(t)P(d)}}$\\
- \hline
-  \end{tabular}
-  \caption{Average score (Pearson) correlation per query.}
-  \label{tb-ds-ir}
-\end{figure*}
-
-  In the next section we show that how the lesser intuitive notion of  {\bf TTF-ITTF} can be used to get DS's {\bf PMI}. 
-
-\subsection{PMI and FTF-ITTF}
-\label{PMI-TF-IDF}
-
-The PMI is a favourable feature value for the vector-based representation
-of a term.
-The PMI is also the basis of TF-IDF, and we show-case the relationship
-in the equations to follow.
-
-Let $d$ be a document, $q$ a query, and $t$ a term.
-The logarithm of likelihood ratio of document and query is:
-\[
-\log\frac{P(d|q)}{P(d)} =
-	\sum_t n_L(t,d) \cdot \log\frac{P(t|q)}{P(t)}
-\]
-Here, $n_L(t,d)=\textmd{freq}(t,d)$ is the within-document term frequency
-quantification.
-
-The likelihood ratio is a measure of (in)dependence.
-The decomposition on the right side leads to the measure of independence
-between term and query.
-\[
-\frac{P(t|q)}{P(t)} = \frac{P(t,q)}{P(t) \cdot P(q)} = \frac{P(q|t)}{P(q)}
-\]
-For NLP, let $t_i$ and $t_j$ be two target terms
-(for which we want to establish a similarity).
-$t_i$ is the ``document" and ``$t_j$" is the query.
-Then:
-\[
-\log\frac{P(t_i|t_j)}{P(t_i)} =
-	\sum_f \textmd{freq}(f,t_i) \cdot \log\frac{P(f|t_j)}{P(f)}
-\]
-The decomposition on the right side ...:
-\[
-\frac{P(f|t_j)}{P(f)} =
-\frac{P(\textmd{feature}|\textmd{target})}{P(\textmd{feature})} =
-\frac{P(\textmd{target}|\textmd{feature})}{P(\textmd{target})}
-\]
-
-The problem is that the term probability (the feature probability)
-is based on the ``total" occurrence, whereas the IDF is based
-on counting documents.
-In other words,
-the feature probability (for IR, term probability) is based on
-the occurrence of the event:
-$P(\textmd{feature term}):=P_{\textmd{Location}}(\textmd{feature term})$
-is based on the Locations (the number of times the feature occurs), so is
-$P(t):=P_{\textmd{Location}}(t)$.
-
-Transformation to the ``document" (the target term) via Poisson bridge.
-...
-
-For IR:
-\[
-P(t) = P(t|q) \cdot P_{\textmd{Doc}}(t)
-\]
-\[
-P(t|q) = \avgtf(t) / \avgdl
-\]
-Therefore:
-\[
-\log\frac{P(t|q)}{P(t)} = \log\frac{1}{P_{\textmd{Doc}}(t)}
-\]
-
-For NLP/PMI:
-\[
-P(f) = P(f|t) \cdot P_\textmd{TargetTerms}(f)
-\]
-\[
-\log\frac{P(f|t_j)}{P(f)} = \log\frac{1}{P_\textmd{TargetTerms}(f)}
-\]
-Expresses how discriminative the feature is.
-
-
-FORM INNER PRODUCT OF TWO TARGET TERMS
-
-
-\section{Phrases}
-
-Title: Phrase-based
-
-
-In CDS
-
-
-In IR
-
-
-\subsection{XF-IDF: Scoring Subject-Verb-Object Phrases}
-
-The main idea of XF-IDF \cite{Azzam/etal:SIGMOD:KEYS:2010} is to extend
-TF-IDF towards a ranking model that supports phrases.
-%
-A document is retrieved if it contains at least one of the query phrases.
-%
-The impact of a phrase on the retrieval score is given by the XF-IDF
-weight of a phrase.
-%
-Let $(s,v,o)$ be a subj-verb-obj phrase.
-In more general, this can be a phrase of any length with any structure
-(e.g.~subject, relationship, object), for the for purpose of this paper,
-we focus the discussion on s-v-o phrases.
-%
-Let $\textmd{type}(x,(s,v,o))$ be a function that retuns the type of the component
-of a phrase, i.e.~$\textmd{type}(s,(s,v,o))=\textmd{subject}$.
-
-Then:
-\[
-w_\textmd{XF-IDF}((s,v,o)) :=
-\sum_{x \in \{s,v,o\}} \TF(x,d) \cdot \IDF(x) \cdot P(\textmd{type}(x,(s,v,o)))
-\]
-To illustrate, consider the XF-IDF weight of the phrase ``woman likes sport".
-
-...
-DO EXAMPLE
-
-
-WHAT IS P(type)?
-
-\section{Relevance vs Similarity}
-
-\subsection{Relevance}
-
-\subsection{Similarity}
 
 \section{Why the independence measure is best}
 
@@ -620,6 +375,77 @@ Effect of L2 norm?
 
 
 Relationship to LM - there should be an obvious one.
+
+\section{SVO Optimial Weighting}
+
+\begin{verbatim}
+w_space0{
+0.40 (subj);
+0.30 (verb);
+0.30 (obj);
+# corr: R5: 76.7
+}
+w_space1{
+0.45 (subj);
+0.35 (verb);
+0.20 (obj);
+# corr: R5: 75.x
+}
+
+w_space2{
+0.35 (subj);
+0.40 (verb);
+0.25 (obj);
+# corr: R5: 75.0
+}
+\end{verbatim}
+
+
+\begin{tabular}{lr}
+\toprule
+{} &         Symbolic to Mixture relative improvement \\
+\midrule
+BNC N5      &  0.060823 \\
+BNC P5      &  0.111693 \\
+BNC PPMI5   &  0.075668 \\
+BNC R5      &  0.035765 \\
+ukWaC N5    &  0.075501 \\
+ukWaC P5    &  0.203443 \\
+ukWaC PPMI5 &  0.049865 \\
+ukWaC R5    &  0.023468 \\
+\bottomrule
+\end{tabular}
+
+\section{Decomposing Similarity}
+Decompsoed additive baseline similarity
+\[
+\frac{cos(sbj1,sbj2) + cos(vrb1,vrb2)) + cos(obj1,obj2)}{3}
+\]
+
+Can any of the NLP sentence similarities decompose? It does not seem so, for example
+\begin{eqnarray*}
+cos(sbj1+verb1,sbj2+vrb2) &\neq& cos(sbj1, sbj2) + cos(vrb1,vrb2) \\
+cos(sbj1\odot verb1,sbj2+vrb2) &\neq& cos(sbj1, sbj2) \odot cos(vrb1,vrb2)
+\end{eqnarray*}
+For kronecker composition has to move between vector of different tensor rank, i.e. either from $V$ to $V \otimes V$ or from the latter to the former. Diagonalization might be helpful here, also convolution kernel might help. 
+
+In general, may be the sentence cosines, do doecompsoe but not in a direct way as above, that is when left and right have the same operation. The operations might vary from lef to right, or the ratios might be preserved etc.
+
+
+\section{Why the independence measure is best}
+
+Multiplication of three vectors: s, v and o.
+\[
+\frac{
+P(c|s) \cdot P(c|v) \cdot P(c|o)}{
+P(c) \cdot P(c) \cdot P(c)} =
+\frac{
+P(s|c) \cdot P(v|c) \cdot P(o|c)
+}{
+P(s) \cdot P(v) \cdot P(o)
+}
+\]
+
 
 
 \section{Decomposing Similarity}
@@ -703,9 +529,203 @@ TODO: how to get this over two columns
 \end{table*}
 
 
+\section{Decomposition Identities}
+{Due to  logarithm identities such as  $\log(a\cdot b) = \log(a) + \log(b)$, we get identities  between the intra-word-level composition methods and the inter-word-level weighting measures, e.g. : 
+
+\begin{proposition}
+\[
+\ov{\sbj\text{-}\vrb\text{-}\obj}\ _{\PMI}^{+} = \log(\ov{\sbj\text{-}\vrb\text{-}\obj}\ _{\Ratio}^{\odot})
+\]
+\end{proposition}
+\begin{proof}
+\begin{eqnarray*}
+\ov{\sbj\text{-}\vrb\text{-}\obj}\ _{\PMI}^{+} &=& \ov{\sbj}_{\PMI} + \ov{\vrb}_{\PMI} + \ov{\obj}_{\PMI} \\
+&=&  \log\frac{P(\featureterm_j \mid \sbj)}{P(\featureterm_j)} + \log\frac{P(\featureterm_j \mid \vrb)}{P(\featureterm_j)} + \log\frac{P(\featureterm_j \mid \obj)}{P(\featureterm_j)}\\
+&=& \log(\frac{P(\featureterm_j \mid \sbj)}{P(\featureterm_j)} \cdot \frac{P(\featureterm_j \mid \vrb)}{P(\featureterm_j)} \cdot \frac{P(\featureterm_j \mid \obj)}{P(\featureterm_j)})\\
+&=& \log (\ov{\sbj}_{\Ratio} \odot \ov{\vrb}_{\Ratio} \odot \ov{\obj}_{\Ratio})
+\end{eqnarray*}
+\end{proof}
+
+\begin{proposition}
+\label{prop:TF-ITTF}
+\[
+\ov{\sbj\text{-}\vrb\text{-}\obj}\ _{\FTF.\ITTF}^{+} = \ov{\sbj\text{-}\vrb\text{-}\obj}\ _{\textmd{Raw}}^{+} \cdot  \ITTF (\textmd{z}, \TT)
+\]
+for $\textmd{z} \in \{\sbj, \vrb, \obj\}$. 
+\end{proposition}
+\begin{proof}
+ Note:  $(i)$ ITTF is invariant to  its first argument, since:
+ \[
+ \log\frac{1}{P_{\TT}(\featureterm)} =  \ITTF(\sbj, \TT)  = \ITTF(\vrb, \TT) = \ITTF (\obj, \TT) 
+\]
+and $(ii)$ FTF is the same as raw counts, that is
+ \[
+ \FTF(\textmd{z},\featureterm) = \ov{\textmd{z}}_{\textmd{Raw}}
+ \]
+ The proposed identity is then obtained as follows:
+\begin{align*}
+&\ov{\sbj\text{-}\vrb\text{-}\obj}\ _{\FTF.\ITTF}^{+} =& \\
+&( \FTF(\sbj, \featureterm) + 
+\FTF(\vrb, \featureterm)  + 
+\FTF(\obj, \featureterm) ) \cdot  \log\frac{1}{P_{\TT}(\featureterm)}
+=& \\
+&(\sum_{z \in \{\sbj, \vrb, \obj\}} \FTF(z, \featureterm)) \cdot \ITTF(z, \TT) =& \\
+&(\ov{\sbj}_{\textmd{Raw}} + \ov{\vrb}_{\textmd{Raw}} + \ov{\obj}_{\textmd{Raw}})  \cdot  
+\ITTF(z, \TT) &
+\end{align*}
+for $\textmd{z} \in \{\sbj, \vrb, \obj\}$
+\end{proof}
+
+The above property is invariant under the composition method.  Similar identities hold  for the point wise multiplication and tensor contraction composition methods. That is:
+
+\medskip
+Proposition \ref{prop:TF-ITTF} (Continued).
+\begin{eqnarray*}
+\ov{\sbj\text{-}\vrb\text{-}\obj}\ _{\FTF.\ITTF}^{\odot} &=& \ov{\sbj\text{-}\vrb\text{-}\obj}\ _{\textmd{Raw}}^{\odot} \cdot  \ITTF (\textmd{z}, \TT)\\
+\ov{\sbj\text{-}\vrb\text{-}\obj}\ _{\FTF.\ITTF}^{\times} &=& \ov{\sbj\text{-}\vrb\text{-}\obj}\ _{\textmd{Raw}}^{\times} \cdot  \ITTF (\textmd{z}, \TT)
+\end{eqnarray*}
+for $\textmd{z} \in \{\sbj, \vrb, \obj\}$. 
 
 
-%%% Local Variables:
-%%% mode: latex
-%%% TeX-master: "paper"
-%%% End:
+
+
+\begin{proposition}
+\[
+\ov{\sbj\text{-}\vrb\text{-}\obj}\ _{\PMI}^{\times}  =  \log(\ov{\sbj}_{\Ratio}) \times (\log(\ov{\vrb}_{\Ratio}) \times \log(\ov{\obj}_{\Ratio}))
+\]
+\end{proposition}
+
+\begin{proof}
+For simplicity suppose $\ov{\vrb}_x$ is a $2 \times 2 \times 2$ cube with coordinates $v_{ijk}$ at depth $i$, row $j$ and column $k$. Suppose further that  $\ov{\sbj}_{\Ratio}$ and $\ov{\obj}_{\Ratio}$ are $2 \times 1$ and $1 \times 2$ vectors with coordinates $s_{ij}$ and $o_{ij}$, respectively,  at row $i$ and column $j$. Holding the depth dimension to be fixed for $i = 1$ for the moment,  tensor contraction $\ov{\vrb}_{\PMI} \times \ov{\obj}_{\PMI}$ can be denoted as follows
+\begin{eqnarray*}
+&\left(\begin{array}{cc}
+\log v_{111} & \log v_{112}\\
+\log v_{121} & \log v_{122}
+\end{array}\right)
+ \times 
+\left( \begin{array}{c}
+\log o_{11}\\
+\log o_{21}
+\end{array}\right)&\\
+&=
+\left(\begin{array}{cc}
+\log v_{111} \log o_{11} + \log v_{112} \log o_{21}\\
+\log v_{121} \log o_{11} + \log v_{122} \log o_{21}
+\end{array}\right)&
+\end{eqnarray*}
+It is easily established that the above is equal to the following
+\[
+\log \left ( \begin{array}{cc}
+v_{111} & v_{112}\\
+v_{121} & v_{122}
+\end{array}
+\right)
+\times
+\log \left ( \begin{array}{c}
+o_{11} \\ o_{21}
+\end{array}\right)
+\]
+Further matrix multiplying this with the vector of the subject will result in a second similar identity, which can be put together with the first one above to obtain the proposition. 
+\end{proof}
+}
+
+
+\section{Attic}
+\subsection{Extending with probability distribution of POS}
+The impact of a phrase on the retrieval score is given by the XF-IDF
+weight of a phrase.
+%
+Let $(s,v,o)$ be a subj-verb-obj phrase.
+
+Let $\textmd{type}(x,(s,v,o))$ be a function that returns the type (PartOfSpeech) of the component
+of the phrase, i.e.~$\textmd{type}(s,(s,v,o))=\textmd{subject}$.
+For example:
+\[
+\textmd{type}(\textmd{sailor},\textmd{(sailor,see,dolphin)})=\textmd{subject}
+\]
+In the following, we employ $\varphi=(s,v,o)$ to stand for a proposition, and $x\in\{s,v,o\}$ to be one of the components of the proposition.
+
+Then:
+\begin{equation}
+\label{eq:xf-idf}
+w_\textmd{XF-IDF}((s,v,o),d) :=
+\sum_{x \in \{s,v,o\}} \XF(x,d) \cdot 
+\IDF(x) \cdot P(\textmd{type}(x),(s,v,o))
+\end{equation}
+\
+
+
+$P$ is a probability distribution over the types (POS), that is we have:
+\[
+\sum_{\textmd{type}} P(\textmd{type})  \ = \ 1
+\]
+
+\subsection{how to do tensors in IR}
+At this point we have established that  FTF.ITTF weighting is the right IR dual of TF.IDF. The interesting question now regards the  IR duals of  composition operators of DS:  what would  be the IR duals of point wise multiplication and tensor contraction (with FTF.ITTF as weighting)?  One can indeed easily dualise the point wise multiplication composition in IR, again for $P(\textmd{type}(x,(s,v,o))) = 1$, as follows:
+\[
+\Pi_{x \in \{s,v,o\}} \TF(x,d) \cdot \IDF(x) \cdot P(\textmd{type}(x,(s,v,o)))\]
+For tensor contraction, one has to assign a tensor to a verb; this can be done thanks to the $P(\textmd{type}(x,(s,v,o)))$  function. One can make it assign  1 to s and o, and assign $I$ to  v, where $I$ the unit cube with 1's on the diagonal and 0's every where else, defined as follows
+ \[
+ I = \sum_{ijk} \featureterm_i \otimes \featureterm_i \otimes \featureterm_i
+ \]
+ This will make the TF.IDF values sit on the diagonal of a cube.  Hence $P$ is defined as follows 
+\[
+\overline{P} := P(\textmd{type}(x,(\sbj,\vrb,\obj))) =  \begin{cases}
+1 & x = \sbj \\
+1 & x = \obj\\
+I & x = \vrb
+\end{cases}
+\]
+But we still have to denote the tensor contraction operation. We do so by parametrizing the $w_\textmd{XF-IDF}$ as follows
+\[
+\begin{cases}
+w_\textmd{XF-IDF}^+ & \mbox{the usual IR composition}\\
+w_\textmd{XF-IDF}^{\odot} &   \mbox{point wise multiplication instead of summation}\\
+w_\textmd{XF-IDF}^{\times} &   \mbox{tensor contraction}
+\end{cases}
+\] 
+ Thus we can fill in the following table:
+ \begin{center}
+ \begin{tabular}{c|c}
+ IR & DS\\
+ \hline
+ \hline
+ &\\
+$w_\textmd{XF-IDF}^+((s,v,o), 1)$ &$ \ov{\sbj\text{-}\vrb\text{-}\obj}\ _{\FTF.\ITTF}^{+}$ \\
+&\\
+$w_\textmd{XF-IDF}^{\odot}((s,v,o), 1)$ & $ \ov{\sbj\text{-}\vrb\text{-}\obj}\ _{\FTF.\ITTF}^{\odot}$ \\
+&\\
+$w_a\textmd{XF-IDF}^{\times}((s,v,o), \overline{P})$ & $ \ov{\sbj\text{-}\vrb\text{-}\obj}\ _{\FTF.\ITTF}^{\times}$ 
+ \end{tabular}
+ \end{center}
+ 
+
+ But would these be useful in any  IR tasks? Tensor contraction has caused speed ups in some DS tasks, would this happen in IR as well? From the other side, one can ask whether playing with the value of $P(\textmd{type}(x,(s,v,o)))$ in $w_\textmd{XF-IDF}((s,v,o), f(P))$  get us anything interesting in DS? Our conjecture here is that one will get the $n$-grams of language models. 
+ 
+
+\subsection{The P in XF-IDF}
+XF-IDF is related to the additive phrase model of DS. Unfolding its definition from  equation \ref{eq:xf-idf} for  $P(\textmd{type}(x,(s,v,o))) = 1$  yields
+ \[ 
+ \TF(\sbj,d) \IDF(\sbj) P(s) +  \TF(\vrb,d) \IDF(\vrb) P(v) +  \TF(\obj,d) \IDF(\obj) P(o)
+ \] 
+A  connection to  the NLP vector model of phrases is immediately realized by observing that  if we  multiply the  FTF.ITTF coordinates of each word vector with the probability that whether that word is either  a subject, a verb, or an object, and apply the additive model of composition, then we obtain the XF-IDF model: 
+ \[
+w_\textmd{XF-IDF}((s,v,o)) \equiv  \ov{\sbj\text{-}\vrb\text{-}\obj}\ _{\FTF.\ITTF.P}^{+} 
+ \]
+A second possibility is to assume that P is a  uniform distribution, use the FTF-ITTF as before, but then take its average over the number of words in the phrases. So we have
+\[
+P(s) = P(v) = P(o) = 1/3
+\]
+hence, 
+ \begin{align*}
+&w_\textmd{XF-IDF}((s,v,o)) = \\
+&(\TF(\sbj,d) \IDF(\sbj) +  \TF(\vrb,d) \IDF(\vrb)  +  \TF(\obj,d) \IDF(\obj))/3
+\end{align*}
+Denoting the average operation by Avg, we obtain 
+\[
+w_\textmd{XF-IDF}((s,v,o)) = \ov{\sbj\text{-}\vrb\text{-}\obj}\ _{\FTF.\ITTF}^{\textmd{Avg}}
+ \]
+
+Both of these options, i.e. multiplying the word vector coordinates with the probability that they are in a certain grammatical role, or taking the overall average  are  possible extensions to the NLP vector models and worth experimenting with. 
+
+
