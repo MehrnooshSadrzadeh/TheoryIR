@@ -1,5 +1,277 @@
 \appendix
 
+\section{PMI as a normalisation measure rather than similarity}
+
+Difference between PMI(ft, tt) and PMI(tti, ttj)
+
+
+This  shows  that PMI is  the right dual notion of IDF, but  it also shows a short coming of the usage of the PMI measure  in NLP   (looking at it from an IR point of view). Where as in IR, the PMI has a TF component ($n_L(t,d)$), in NLP, this component (i.e. its dual  FTF) is missing.   In IR terms, this means that PMI does have a  discrimination factor for the feature terms, but the impact of the  frequency between target terms and feature terms is played down.  One can try overcome this problem by  multiplying the PMI with an explicit FTF, that is form a measure such as $\FTF \cdot \textmd{PPMI}$, but this is now doing another extreme: playing up the impact of the target term-feature term frequency.  
+
+ We conjecture that  the FTF.ITTF itself would be the more appropriate choice, hence adhering to the duality
+ \[
+\TF \cdot \IDF \equiv \textmd{Raw} \cdot \PMI
+\]
+
+Once PMI is computed from ITTF, other DS measures are also easily obtainable, see  table \ref{tb-ds-ir}.
+ 
+\begin{figure*}[htb]
+  \centering
+  \begin{tabular}{|l|c|c|l|}
+  \hline
+  DS Measure  && IR Dual &\\
+  \hline
+ Raw Counts  &$n_{\textmd{TT}}(\featureterm,\targetterm)$ & TF &$n_{\textmd{D}}(t,d)$\\
+ &&&\\
+ PMI & $\log{\frac{P(\featureterm \mid \targetterm)}{P(\featureterm)}}$  &  probabilistic version of IDF  &$\log{\frac{P(t \mid q)}{P(t)}}$\\
+ &&&\\
+ Conditional Probability &$ \frac{P(\featureterm \mid \targetterm)}{P(\featureterm)}$ &  un-logged version of above  &$\frac{P(t\mid q)}{P(t)}$ \\
+  &&&\\
+  Ratio Likelihood & $\frac{P(\featureterm \mid \targetterm)}{P(\featureterm)P(\targetterm)}$ & $\frac{\textmd{un-logged version of above }}{P(q)}$ & $\frac{P(t \mid q)}{P(t) P(q)}$ \\
+ &&&\\
+ LMI && FTF.ITTF&\\
+  \hline
+  \end{tabular}
+  \caption{Nothing}
+  \label{tb-ds-ir}
+\end{figure*}
+
+
+
+\section{DQI}
+
+------Thomas, is the following correct?-----
+Yes.
+
+Finally, note that in IR, PMI is a measure used to compute the degree of independence between the document and query:
+\[
+\log\textmd{DQI}(d,q) = \PMI(d,q)
+\] 
+So what DS is calculating is DQI$(\targetterm_1, \targetterm_2)$, that is,  the degree of independence between target terms.
+
+
+
+$\PMI(\targetterm_d,\targetterm_q)$ corresponds to $\DQI(d,q)$ (ommitting details regarding the log transformation).
+
+$\PMI(\targetterm_d,\featureterm_j)$ corresponds to
+$\PMI(d,t)$; this is the LM-side of the DQI, i.e.~the decomposition of the query event.
+
+$\PMI(\targetterm_q,\featureterm_j)$ corresponds to
+$\PMI(q,t)$; this is the TF-IDF side
+of the DQI, i.e.~the decomposition of the document event.
+
+Since the PMI is symmetric (WELL, not if we decompose events!), ...
+
+
+
+
+
+\section{PMI, IDF and ITTF (query)}
+\label{sec:PMI-IDF-ITTF-(query)}
+
+
+Let $d$ be a document, $q$ a query, and $t$ a term.
+The logarithm of likelihood ratio of document and query is:
+\[
+\log\frac{P(d|q)}{P(d)} =
+	\sum_t n_L(t,d) \cdot \log\frac{P(t|q)}{P(t)}
+\]
+Here, $n_L(t,d)=\textmd{freq}(t,d)$ is the within-document term frequency
+quantification.
+
+The likelihood ratio is a measure of (in)dependence.
+The decomposition on the right side leads to the measure of independence
+between term and query.
+\[
+\frac{P(t|q)}{P(t)} = \frac{P(t,q)}{P(t) \cdot P(q)} = \frac{P(q|t)}{P(q)}
+\]
+For NLP, let $\targetterm_i$ and $\targetterm_j$ be two target terms
+(for which we want to establish a similarity).
+$\targetterm_i$ is the ``document" and ``$\targetterm_j$" is the query.
+Then:
+\[
+\log\frac{P(\targetterm_i|\targetterm_j)}{P(\targetterm_i)} =
+	\sum_f \textmd{freq}(\featureterm,\targetterm_i) \cdot \log\frac{P(\featureterm|\targetterm_j)}{P(\featureterm)}
+\]
+The decomposition on the right side ...:
+\[
+\frac{P(\featureterm|\targetterm_j)}{P(\featureterm)} =
+\frac{P(\textmd{feature}|\textmd{target})}{P(\textmd{feature})} =
+\frac{P(\textmd{target}|\textmd{feature})}{P(\textmd{target})}
+\]
+
+The problem is that the term probability (the feature probability)
+is based on the ``total" occurrence, whereas the IDF is based
+on counting documents.
+In other words,
+the feature probability (for IR, term probability) is based on
+the occurrence of the event:
+$P(\textmd{feature term}):=P_{\textmd{L}}(\textmd{feature term})$
+is based on the Locations (the number of times the feature occurs), so is
+$P(\targetterm):=P_{\textmd{L}}(\targetterm)$.
+
+Transformation to the ``document" (the target term) via Poisson bridge.
+...
+
+For IR:
+\[
+P(t) = P(t|q) \cdot P_{\textmd{D}}(t)
+\]
+\[
+P(t|q) = \avgtf(t) / \avgdl
+\]
+Therefore:
+\[
+\log\frac{P(t|q)}{P(t)} = \log\frac{1}{P_{\textmd{D}}(t)}
+\]
+
+For NLP/PMI:
+\[
+P(\featureterm) = P(\featureterm|\targetterm) \cdot P_\textmd{TT}(\featureterm)
+\]
+\begin{equation}
+\label{eq:pmi-log}
+\log\frac{P(\featureterm|\targetterm_j)}{P(\featureterm)} = \log\frac{1}{P_\textmd{TT}(\featureterm)}
+\end{equation}
+
+This shows that the dual to TF.IDF in DS is Raw.PMI, 
+\[
+\TF \cdot \IDF \equiv \textmd{Raw} \cdot \PMI
+\]
+Herein, the log expression expresses how discriminative the feature is. 
+
+Once PMI is computed from ITTF, other DS measures are also easily obtainable, see  table \ref{tb-ds-ir}.
+ 
+\begin{figure*}[htb]
+  \centering
+  \begin{tabular}{|l|c|c|l|}
+  \hline
+  DS Measure  && IR Dual &\\
+  \hline
+ Raw Counts  &$n_{\textmd{TT}}(\featureterm,\targetterm)$ & TF &$n_{\textmd{D}}(t,d)$\\
+ &&&\\
+ PMI & $\log{\frac{P(\featureterm \mid \targetterm)}{P(\featureterm)}}$  &  probabilistic version of IDF  &$\log{\frac{P(t \mid q)}{P(t)}}$\\
+ &&&\\
+ Conditional Probability &$ \frac{P(\featureterm \mid \targetterm)}{P(\featureterm)}$ &  un-logged version of above  &$\frac{P(t\mid q)}{P(t)}$ \\
+  &&&\\
+  Ratio Likelihood & $\frac{P(\featureterm \mid \targetterm)}{P(\featureterm)P(\targetterm)}$ & $\frac{\textmd{un-logged version of above }}{P(q)}$ & $\frac{P(t \mid q)}{P(t) P(q)}$ \\
+ &&&\\
+ LMI && FTF.ITTF&\\
+  \hline
+  \end{tabular}
+  \caption{Nothing}
+  \label{tb-ds-ir}
+\end{figure*}
+
+
+This  shows  that PMI is  the right dual notion of IDF, but  it also shows a short coming of PMI   (looking at it from an IR point of view): the FTF component of PMI is also  logarithmic. In IR terms, this means that PMI does have a  discrimination factor for the feature terms, but the impact of the  frequency between target terms and feature terms is played down. 
+
+One can try overcome this problem by  multiplying the PMI with an explicit FTF, that is form a measure such as $\FTF \cdot \textmd{PPMI}$, but this is now doing another extreme: playing up the impact of the target term-feature term frequency.  
+
+But we conjecture that  the FTF.ITTF itself would be the more appropriate choice.   This measure will allow us to reason about the similarity between two terms by dualizing from  the similarity between document and query. That is, we can define:  $\textmd{sim}(\targetterm_i,\targetterm_j)$ is high if we have:
+\begin{enumerate}
+\item Many feature terms occur $k$-close-to  subject, verb, and object.
+\item The feature terms are rare.
+\end{enumerate}
+
+------Thomas, is the following correct?-----
+Yes.
+
+Finally, note that in IR, PMI is a measure used to compute the degree of independence between the document and query:
+\[
+\log\textmd{DQI}(d,q) = \PMI(d,q)
+\] 
+So what DS is calculating is DQI$(\targetterm_1, \targetterm_2)$, that is,  the degree of independence between target terms.
+
+
+
+$\PMI(\targetterm_d,\targetterm_q)$ corresponds to $\DQI(d,q)$ (ommitting details regarding the log transformation).
+
+$\PMI(\targetterm_d,\featureterm_j)$ corresponds to
+$\PMI(d,t)$; this is the LM-side of the DQI, i.e.~the decomposition of the query event.
+
+$\PMI(\targetterm_q,\featureterm_j)$ corresponds to
+$\PMI(q,t)$; this is the TF-IDF side
+of the DQI, i.e.~the decomposition of the document event.
+
+Since the PMI is symmetric (WELL, not if we decompose events!), ...
+
+
+
+
+\section{Deriving the DS phrase Similarity in IR}
+\label{sec:DS-Phrase-Similarity-vs-XF-IDF}
+
+
+In this section we show how the degree of similarity of DS can be derived from a generalised notion of inner product in IR and how this yields a symmetric version of the degree of implication in IR. 
+ 
+In order to be able to measure the DS similarity of a document and a query, one has to form their inner product:
+\[
+\vec{d} \cdot \vec{q}
+\]
+where the vectors of document and query are defined (for a space of dimension three) as follows:
+\[
+\vec{d} =
+	\left(
+	\begin{matrix}
+	P(t_1|d)\\
+	P(t_2|d)\\
+	P(t_3|d)\\
+	\end{matrix}
+	\right),
+\qquad
+\vec{q} =
+	\left(
+	\begin{matrix}
+	P(q|t_1)\\
+	P(q|t_2)\\
+	P(q|t_3)\\
+	\end{matrix}
+	\right)
+\]
+Recall the degree of implication equation:
+\[
+P(q|d) = \sum_t P(q|t) \cdot P(t|d)
+\]
+Rewrite it as follows:
+\[
+P(q|d) = \frac{1}{P(d)} \cdot \sum_t P(q|t) \cdot P(d|t) \cdot P(t)
+\]
+
+The reformulation helps
+to make $\vec{d}$ and $\vec{q}$ having the same semantics:
+\[
+\vec{d} =
+	\left(
+	\begin{matrix}
+	P(d|t_1)\\
+	P(d|t_2)\\
+	P(d|t_3)\\
+	\end{matrix}
+	\right)
+\]
+The rewriting is obtainable by using a generalised inner product:
+\[
+\vec{d}^T \cdot G \cdot \vec{q}
+\]
+where the  $G$ operator is defined as follows:
+\[
+G=
+\left[
+\begin{matrix}
+P(t_1) \\
+0 & P(t_2) \\
+0 & 0 & P(t_3) \\
+\end{matrix}
+\right]
+\]
+
+
+As a result  we obtain a symmetric version of implication, that is we have:
+\[
+P(d \to q) \equiv P(q \to d) \equiv \vec{d}^T \cdot G \cdot \vec{q}
+\] 
+This is the same as the inner product, hence dualists the similarity measure of DS. 
+
 \section{NLP vs IR}
 
 \begin{table*}[htbp]
@@ -157,4 +429,103 @@ cos(sbj1\odot verb1,sbj2+vrb2) &\neq& cos(sbj1, sbj2) \odot cos(vrb1,vrb2)
 \end{eqnarray*}
 For kronecker composition has to move between vector of different tensor rank, i.e. either from $V$ to $V \otimes V$ or from the latter to the former. Diagonalization might be helpful here, also convolution kernel might help. 
 
+In general, may be the sentence cosines, do doecompsoe but not in a direct way as above, that is when left and right have the same operation. The operations might vary from lef to right, or the ratios might be preserved etc.
+
+
+\section{Why the independence measure is best}
+
+Multiplication of three vectors: s, v and o.
+\[
+\frac{
+P(c|s) \cdot P(c|v) \cdot P(c|o)}{
+P(c) \cdot P(c) \cdot P(c)} =
+\frac{
+P(s|c) \cdot P(v|c) \cdot P(o|c)
+}{
+P(s) \cdot P(v) \cdot P(o)
+}
+\]
+
+
+
+\section{Decomposing Similarity}
+Decompsoed additive baseline similarity
+\[
+\frac{cos(sbj1,sbj2) + cos(vrb1,vrb2)) + cos(obj1,obj2)}{3}
+\]
+
+Can any of the NLP sentence similarities decompose? It does not seem so, for example
+\begin{eqnarray*}
+cos(sbj1+verb1,sbj2+vrb2) &\neq& cos(sbj1, sbj2) + cos(vrb1,vrb2) \\
+cos(sbj1\odot verb1,sbj2+vrb2) &\neq& cos(sbj1, sbj2) \odot cos(vrb1,vrb2)
+\end{eqnarray*}
+For kronecker composition has to move between vector of different tensor rank, i.e. either from $V$ to $V \otimes V$ or from the latter to the former. Diagonalization might be helpful here, also convolution kernel might help. 
+
 In general, may be the sentence cosines, do doecompsoe but not in a direct way as above, that is when left and right have the same operation. The operations might vary from lef to right, or the ratios might be preserved etc. 
+
+
+
+\section{cosines again}
+
+\begin{eqnarray}
+\cos(angle(s\odot v\odot o, ...) &=&  1/ \sum P(s,v,o|c) \cdot P(c)\\
+\cos(angle(s+v+o, ...) &=& \sum (P(s|c)  \cdot  ... + P(v|c) ... + ....)  \cdot  ....\\
+\cos(angle(s+v+o, ...) &=&  \sum (\log{\Pi_{x in s,v,o} (P(x,c)/P(x) \cdot P(c)) ...}\\
+\end{eqnarray}
+
+\section{various log measures}
+
+\begin{eqnarray}
+\textmd{NLogP}&   N(t,c)  \cdot \log{1}{P(c)}\\
+\textmd{LogNLogP}&  log(N(t,c)+1) \cdot \log{1}{P(c)}\\
+\textmd{PExpN}&    P(c)^{-N(t,c)}\\
+\textmd{PExpLogN}& P(c)^{-\log{N(t,c)+1}}\\
+\end{eqnarray}
+
+\begin{table*}[htbp]
+\begin{tabularx}{\textwidth}{l|XX}
+& NLP & IR\\
+\hline
+co-occurrence
+&
+        co-occurrence between the semantic symbol (target word) and feature words
+        &
+        co-occurrence between the semantic symbols (words) themselves
+        \\
+        \hline
+representation of words
+        & distributional & symbolic\\
+        \hline
+single vs set & similarity between two
+    \emph{single phrases}
+    & relationship (implication, entailment) between two
+    \emph{sets of phrases}\\
+
+symmetric yes/no &
+    similarity is a symmetric function &
+relationship between sets is not symmetric; moreover, the phrase-based score is not necessarily symmetric\\
+\hline
+similar/relevant
+& phrase $t_i$ is similar to phrase $t_j$ &
+document~$d$ (source) is relevant with respect to query~$q$ (target)\\
+\hline
+scores
+& the similarity score is estimated
+based on the distance/angle between distributional vectors
+& the relevance score is estimated
+based on the retrieval model that computes the implication between the set of document and the set of query propositions\\
+probabilistic semantics
+& (in)dependence between target word and feature word: $\frac{P(w_t,w_f)}{P(w_t) \cdot P(w_f)}$
+& (in)dependent between document and query:
+$\frac{P(d,q)}{P(d) \cdot P(q)}$\\
+\hline
+& for this work: virtual query has exactly one proposition; virtual document has exactly one condition; therefore, the similarity score $\textmd{sim}(\textmd{phrase1},\textmd{phrase2})$ can be compared to the retrieval score
+$\textmd{RSV}(\textmd{document: set of phrases},\textmd{query: set of phrases})$.
+
+TODO: how to get this over two columns
+\\
+        \hline
+\end{tabularx}
+\end{table*}
+
+
